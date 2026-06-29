@@ -9,8 +9,12 @@ package com.nettomailancia.sobrevivenciajurassica;
  * @author joaop
  */
 public class TRex extends Dinosaur{
-    void Velociraptor (){
+    TRex() {
         hp = 3;
+    }
+    
+    public char getChar() {
+        return 'R';
     }
     void move (){
         

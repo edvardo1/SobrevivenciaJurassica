@@ -8,9 +8,12 @@ package com.nettomailancia.sobrevivenciajurassica;
  *
  * @author joaop
  */
-public class Compsognato extends Dinosaur {
-    void Compsognato(){
+public class Compsognathus extends Dinosaur {
+    Compsognathus() {
         hp = 1;
+    }
+    char getChar() {
+        return 'C';
     }
     void move (){
         

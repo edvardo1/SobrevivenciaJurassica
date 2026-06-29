@@ -27,7 +27,11 @@ public class Player extends Entity {
         darts = 0;  
         shockBat = false;
     }
-    
+   
+    public char getChar() {
+        return '@';
+    }
+
     public void move(){
         System.out.println("Qual posição de destino? ");
         Scanner scanner = new Scanner(System.in);

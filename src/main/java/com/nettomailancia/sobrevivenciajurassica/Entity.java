@@ -11,15 +11,14 @@ package com.nettomailancia.sobrevivenciajurassica;
 abstract public class Entity {
     int hp;
     
-    void Entity (  ){}
-    //char getChar{}
-    abstract void move ();
-    abstract void damage ( int d );
-    int getHp(){
+    abstract void move();
+    abstract void damage(int d);
+    abstract char getChar();
+
+    int getHp() {
         return hp;
     }
-    void setHp(int life){
-        this.hp = life;
+    void setHp(int hp) {
+        this.hp = hp;
     }
-    
 }
