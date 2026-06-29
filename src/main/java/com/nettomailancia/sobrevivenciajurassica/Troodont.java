@@ -8,8 +8,8 @@ package com.nettomailancia.sobrevivenciajurassica;
  *
  * @author joaop
  */
-public class Troodonte extends Dinosaur {
-    Troodonte() {
+public class Troodont extends Dinosaur {
+    Troodont() {
         hp = 2;
     }
     public char getChar() {
