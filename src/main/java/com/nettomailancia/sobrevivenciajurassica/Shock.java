@@ -9,5 +9,9 @@ package com.nettomailancia.sobrevivenciajurassica;
  * @author joaop
  */
 public class Shock extends Supply {
-    
+    public boolean onPlayerMovement(Player p, FreeTile myTile) {
+        p.acquireShock();
+        myTile.setSupply(null);
+        return true;
+    }
 }

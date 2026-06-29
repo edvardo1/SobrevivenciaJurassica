@@ -9,5 +9,10 @@ package com.nettomailancia.sobrevivenciajurassica;
  * @author joaop
  */
 public class DartGun extends Supply {
-    
+    @Override
+    public boolean onPlayerMovement(Player p, FreeTile myTile) {
+        p.addDarts(5);
+        myTile.setSupply(null);
+        return true;
+    }
 }
