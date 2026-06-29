@@ -60,24 +60,28 @@ public class Player extends Entity {
                 }
             break;
             case 2:
-                System.out.println("Atacando com o bastão");
-                if(result >= 5){
-                    enemy.damage(2);
-                    System.out.println("Acerto critico!");
-                }else if(result == 1){
-                    System.out.println("Erro crítico!");
-                }else{
-                    System.out.println("Acerto");
-                    enemy.damage(1);
+                if(shockBat){
+                    System.out.println("Atacando com o bastão");
+                    if(result >= 5){
+                        enemy.damage(2);
+                        System.out.println("Acerto critico!");
+                    }else if(result == 1){
+                        System.out.println("Erro crítico!");
+                    }else{
+                        System.out.println("Acerto");
+                        enemy.damage(1);
+                    }
                 }
             break;
             case 3:
-                System.out.println("Atacando com a arma de dardos");
-                darts--;
-                if(enemy instanceof Velociraptor){
-                    System.out.println("Raptor desvia!");
-                }else{
-                    enemy.damage(2);
+                if(darts > 0){
+                    System.out.println("Atacando com a arma de dardos");
+                    darts--;
+                    if(enemy instanceof Velociraptor){
+                        System.out.println("Raptor desvia!");
+                    }else{
+                        enemy.damage(2);
+                    }
                 }
             break;
         }
