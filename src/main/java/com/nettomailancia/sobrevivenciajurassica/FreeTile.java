@@ -9,8 +9,8 @@ package com.nettomailancia.sobrevivenciajurassica;
  * @author ebm
  */
 public class FreeTile extends Tile {
-    Entity entity;
-    Supply supply;
+    private Entity entity;
+    private Supply supply;
     
     public FreeTile(Entity e, Supply s) {
         entity = e;
@@ -29,11 +29,27 @@ public class FreeTile extends Tile {
         this(null, null);
     }
     
+    public Entity getEntity() {
+        return entity;
+    }
+
+    public void setEntity(Entity entity) {
+        this.entity = entity;
+    }
+
+    public Supply getSupply() {
+        return supply;
+    }
+
+    public void setSupply(Supply supply) {
+        this.supply = supply;
+    }
+    
     @Override
     char getChar() {
-        if (entity != null) {
-            return entity.getChar();
-        } else if (supply != null) {
+        if (getEntity() != null) {
+            return getEntity().getChar();
+        } else if (getSupply() != null) {
             return 'X';
         } else {
             return '.';

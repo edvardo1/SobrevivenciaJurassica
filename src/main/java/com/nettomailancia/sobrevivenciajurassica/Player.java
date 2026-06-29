@@ -18,7 +18,6 @@ public class Player extends Entity {
     private Boolean shockBat;
     
    public void Player(int X, int Y, int difficulty){
-        
         hp = 5;
         posX = X;
         posY = Y;
