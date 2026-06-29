@@ -10,4 +10,5 @@ package com.nettomailancia.sobrevivenciajurassica;
  */
 abstract public class Tile {
     abstract char getChar();
+    abstract boolean isOccupied();
 }

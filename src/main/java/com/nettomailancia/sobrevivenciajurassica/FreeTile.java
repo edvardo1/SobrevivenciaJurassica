@@ -46,10 +46,15 @@ public class FreeTile extends Tile {
     }
     
     @Override
+    boolean isOccupied() {
+        return this.getEntity() != null;
+    }
+
+    @Override
     char getChar() {
-        if (getEntity() != null) {
-            return getEntity().getChar();
-        } else if (getSupply() != null) {
+        if (this.getEntity() != null) {
+            return this.getEntity().getChar();
+        } else if (this.getSupply() != null) {
             return 'X';
         } else {
             return '.';

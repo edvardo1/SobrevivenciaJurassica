@@ -10,6 +10,11 @@ package com.nettomailancia.sobrevivenciajurassica;
  */
 public class Wall extends Tile {
     @Override
+    boolean isOccupied() {
+        return true;
+    }
+
+    @Override
     char getChar() {
         return '#';
     }
