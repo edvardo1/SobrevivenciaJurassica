@@ -15,6 +15,11 @@ public class Velociraptor extends Dinosaur {
     }
 
     @Override
+    public String getName() {
+        return "Velociraptor";
+    }
+
+    @Override
     public char getChar() {
         return 'T';
     }

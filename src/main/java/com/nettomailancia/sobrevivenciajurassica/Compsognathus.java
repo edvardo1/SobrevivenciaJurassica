@@ -15,6 +15,11 @@ public class Compsognathus extends Dinosaur {
     }
 
     @Override
+    public String getName() {
+        return "Compsognato";
+    }
+
+    @Override
     char getChar() {
         return 'C';
     }

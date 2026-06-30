@@ -18,6 +18,11 @@ public class Troodont extends Dinosaur {
     public char getChar() {
         return 'T';
     }
+    
+    @Override
+    public String getName() {
+        return "Troodonte";
+    }
 
     void move() {
 

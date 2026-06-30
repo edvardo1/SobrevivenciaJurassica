@@ -13,6 +13,12 @@ public class TRex extends Dinosaur {
     TRex() {
         this.setHp(3);
     }
+    
+        
+    @Override
+    public String getName() {
+        return "T-Rex";
+    }
 
     @Override
     public char getChar() {

@@ -10,21 +10,64 @@ package com.nettomailancia.sobrevivenciajurassica;
  */
 abstract public class Entity {
 
+    private Position position;
     private int hp;
-
-    void Entity(int hp) {
-        hp = hp;
+    
+    public Entity() {
     }
 
-    abstract boolean move(Direction d, TileMap tm);
+    public Entity(Position p, int hp) {
+        this.hp = hp;
+        position = p;
+    }
 
-    abstract char getChar();
+    public Position getPosition() {
+        return position;
+    }
 
-    int getHp() {
+    public void setPosition(Position p) {
+        position = p;
+    }
+
+    public int getHp() {
         return hp;
     }
 
-    void setHp(int hp) {
+    public void setHp(int hp) {
         this.hp = hp;
     }
+
+    private FreeTile getCurrentFreeTile(TileMap tm) throws Exception {
+        return (FreeTile) tm.getTile(position);
+    }
+
+    public boolean move(Position newPosition, TileMap tm) {
+        try {
+            FreeTile currentTile = getCurrentFreeTile(tm);
+
+            boolean inBoundsX = 0 <= newPosition.getX() && newPosition.getX() <= tm.getWidth();
+            boolean inBoundsY = 0 <= newPosition.getY() && newPosition.getY() <= tm.getHeight();
+            if (!inBoundsX || !inBoundsY) {
+                return false;
+            }
+            Tile nextTile = tm.getTile(newPosition);
+            if (nextTile == null) {
+                throw new Exception("what");
+            }
+            if (nextTile.isOccupied()) {
+                return false;
+            }
+            FreeTile nextFreeTile = (FreeTile) nextTile;
+
+            position = new Position(newPosition);
+            currentTile.setEntity(null);
+            nextFreeTile.setEntity(this);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    abstract char getChar();
+
 }

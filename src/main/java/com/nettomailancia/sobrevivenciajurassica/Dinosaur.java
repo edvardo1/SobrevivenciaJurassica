@@ -9,13 +9,14 @@ package com.nettomailancia.sobrevivenciajurassica;
  * @author joaop
  */
 abstract public class Dinosaur extends Entity {
+    
+    abstract String getName();
 
-    @Override
-    boolean move(Direction d, TileMap tm) {
-        return false;
+    public void attackPlayer(Player player) {
+        player.setHp(player.getHp() - 1);
     }
 
-    void damageHand() {
+    public void damageHand() {
         int points = Rng.getInstance().dice(6);
         if (points == 6) {
             this.setHp(this.getHp() - 2);
@@ -24,7 +25,7 @@ abstract public class Dinosaur extends Entity {
         }
     }
 
-    void damageShockBaton() {
+    public void damageShockBaton() {
         int points = Rng.getInstance().dice(6);
         if (points == 6) {
             this.setHp(this.getHp() - 2);
@@ -33,7 +34,7 @@ abstract public class Dinosaur extends Entity {
         }
     }
 
-    void damageDart() {
+    public void damageDart() {
         this.setHp(this.getHp() - 2);
     }
 }
