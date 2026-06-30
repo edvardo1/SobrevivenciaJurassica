@@ -14,9 +14,8 @@ abstract public class Dinosaur extends Entity {
     boolean move(Direction d, TileMap tm) {
         return false;
     }
-
-    @Override
-    void damage(int d) {
-        this.hp -= d;
-    }
+    
+    void damageHand() {}
+    void damageShockBaton() {}
+    void damageDart() {}
 }

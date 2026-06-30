@@ -11,9 +11,10 @@ package com.nettomailancia.sobrevivenciajurassica;
 public class TRex extends Dinosaur {
 
     TRex() {
-        hp = 3;
+        this.setHp(3);
     }
 
+    @Override
     public char getChar() {
         return 'R';
     }

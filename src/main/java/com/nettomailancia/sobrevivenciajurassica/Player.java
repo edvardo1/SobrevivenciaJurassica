@@ -21,7 +21,7 @@ public class Player extends Entity {
     private boolean shockBat;
 
     Player(int x, int y, int difficulty) {
-        hp = 5;
+        this.setHp(5);
         posX = x;
         posY = y;
         perception = difficulty;
@@ -86,10 +86,6 @@ public class Player extends Entity {
         }
     }
 
-    void damage(int d) {
-        this.hp -= d;
-    }
-
     public void addDarts(int amount) {
         darts += amount;
     }
@@ -100,6 +96,18 @@ public class Player extends Entity {
 
     public void acquireShock() {
         shockBat = true;
+    }
+
+    public int getDarts() {
+        return darts;
+    }
+
+    public boolean hasDarts() {
+        return darts > 0;
+    }
+
+    public boolean hasShock() {
+        return shockBat;
     }
 
     public void attack(Dinosaur enemy, int choice) {
@@ -113,13 +121,13 @@ public class Player extends Entity {
                 } else {
                     System.out.println("Atacando com a mão");
                     if (result == 6) {
-                        enemy.damage(2);
+                        //enemy.damage(2);
                         System.out.println("Acerto critico!");
                     } else if (result < 3) {
                         System.out.println("Erro crítico!");
                     } else {
                         System.out.println("Acerto");
-                        enemy.damage(1);
+                        //enemy.damage(1);
                     }
                 }
                 break;
@@ -127,13 +135,13 @@ public class Player extends Entity {
                 if (shockBat) {
                     System.out.println("Atacando com o bastão");
                     if (result >= 5) {
-                        enemy.damage(2);
+                        //enemy.damage(2);
                         System.out.println("Acerto critico!");
                     } else if (result == 1) {
                         System.out.println("Erro crítico!");
                     } else {
                         System.out.println("Acerto");
-                        enemy.damage(1);
+                        //enemy.damage(1);
                     }
                 }
                 break;
@@ -144,7 +152,7 @@ public class Player extends Entity {
                     if (enemy instanceof Velociraptor) {
                         System.out.println("Raptor desvia!");
                     } else {
-                        enemy.damage(2);
+                        //enemy.damage(2);
                     }
                 }
                 break;
@@ -159,12 +167,12 @@ public class Player extends Entity {
             return true;
         } else {
             System.out.println("O dinosauro acerta um golpe!");
-            damage(1);
+            //damage(1);
             return false;
         }
     }
 
     public void heal() {
-        hp = 5;
+        //hp = 5;
     }
 }

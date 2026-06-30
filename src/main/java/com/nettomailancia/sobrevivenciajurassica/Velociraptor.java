@@ -11,9 +11,10 @@ package com.nettomailancia.sobrevivenciajurassica;
 public class Velociraptor extends Dinosaur {
 
     Velociraptor() {
-        hp = 2;
+        this.setHp(2);
     }
 
+    @Override
     public char getChar() {
         return 'T';
     }

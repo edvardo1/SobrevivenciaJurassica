@@ -10,15 +10,13 @@ package com.nettomailancia.sobrevivenciajurassica;
  */
 abstract public class Entity {
 
-    protected int hp;
+    private int hp;
 
-    void Entity(int life) {
-        hp = life;
+    void Entity(int hp) {
+        hp = hp;
     }
 
     abstract boolean move(Direction d, TileMap tm);
-
-    abstract void damage(int d);
 
     abstract char getChar();
 
