@@ -11,6 +11,7 @@ import java.util.Random;
  * @author joaop
  */
 public class Player extends Entity {
+
     static final int MAX_HP = 5;
     private int perception;
     private int medkits;
@@ -62,55 +63,6 @@ public class Player extends Entity {
         this.perception = perception;
     }
 
-   /* public void attack(Dinosaur enemy, int choice) {
-        Random d6 = new Random();
-        int result = d6.nextInt(6);
-
-        switch (choice) {
-            case 1:
-                if (enemy instanceof TRex) {
-                    System.out.println("T-rex é imune a mão");
-                } else {
-                    System.out.println("Atacando com a mão");
-                    if (result == 6) {
-                        //enemy.damage(2);
-                        System.out.println("Acerto critico!");
-                    } else if (result < 3) {
-                        System.out.println("Erro crítico!");
-                    } else {
-                        System.out.println("Acerto");
-                        //enemy.damage(1);
-                    }
-                }
-                break;
-            case 2:
-                if (shockBat) {
-                    System.out.println("Atacando com o bastão");
-                    if (result >= 5) {
-                        //enemy.damage(2);
-                        System.out.println("Acerto critico!");
-                    } else if (result == 1) {
-                        System.out.println("Erro crítico!");
-                    } else {
-                        System.out.println("Acerto");
-                        //enemy.damage(1);
-                    }
-                }
-                break;
-            case 3:
-                if (darts > 0) {
-                    System.out.println("Atacando com a arma de dardos");
-                    darts--;
-                    if (enemy instanceof Velociraptor) {
-                        System.out.println("Raptor desvia!");
-                    } else {
-                        //enemy.damage(2);
-                    }
-                }
-                break;
-        }
-    }*/
-
     public Boolean dodge() {
         if (Rng.getInstance().dice(3) <= this.getPerception()) {
             return true;
@@ -119,7 +71,10 @@ public class Player extends Entity {
         }
     }
 
-    public void heal() {
-        setHp(Math.max(getHp() + 1, MAX_HP));
+    public void tryHeal() {
+        if (medkits > 0) {
+            setHp(Math.max(getHp() + 1, MAX_HP));
+            medkits -= 1;
+        }
     }
 }

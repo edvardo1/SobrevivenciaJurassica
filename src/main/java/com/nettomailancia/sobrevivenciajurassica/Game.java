@@ -177,6 +177,8 @@ public class Game {
             tryMove(Direction.SOUTH);
         } else if (s.equals("d")) {
             tryMove(Direction.EAST);
+        } else if (s.equals("c")) {
+            player.tryHeal();
         } else if (s.equals("q")) {
             running = false;
         } else if (s.equals("D")) {
