@@ -33,7 +33,7 @@ abstract public class MapGenerator {
         ArrayList<Dinosaur> chosenDinos = new ArrayList<Dinosaur>();
         ArrayList<Supply> chosenItems = new ArrayList<Supply>();
         for (int i = 0; i < 5; i += 1) {
-            chosenDinos.add(new Troodont());
+            chosenDinos.add(new Troodon());
         }
         for (int i = 0; i < 2; i += 1) {
             chosenDinos.add(new Compsognathus());
