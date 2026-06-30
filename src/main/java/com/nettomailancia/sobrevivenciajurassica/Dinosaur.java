@@ -9,11 +9,29 @@ package com.nettomailancia.sobrevivenciajurassica;
  * @author joaop
  */
 abstract public class Dinosaur extends Entity {
-    
+
     abstract String getName();
-    
+
+    public void tryMoveDir(Game game, Player p, TileMap tm, Direction d) {
+        Position nextPosition = new Position(getPosition(), d);
+        if (nextPosition.equals(getPosition()) && game.getBattle() == null) {
+            game.setBattle(new Battle(p, this, true));
+        }
+    }
+
     public void think(Game game, Player p, TileMap tm) {
-         /* brainless */
+        Direction d = Direction.NORTH;
+        int i = Rng.getInstance().dice(4);
+        if (i == 1) {
+            d = Direction.NORTH;
+        } else if (i == 2) {
+            d = Direction.SOUTH;
+        } else if (i == 3) {
+            d = Direction.EAST;
+        } else if (i == 4) {
+            d = Direction.SOUTH;
+        }
+        tryMoveDir(game, p, tm, d);
     }
 
     public void attackPlayer(Player player) {
