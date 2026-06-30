@@ -24,4 +24,9 @@ public class TRex extends Dinosaur {
     public char getChar() {
         return 'R';
     }
+    
+    @Override
+    public void damageHand() {
+        System.out.println("T-rex possui uma pele muito grossa, seu soco não causa dano!");
+    }
 }
