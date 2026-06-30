@@ -12,12 +12,12 @@ public class Position {
 
     private int x;
     private int y;
-    
+
     public Position(int x, int y) {
         this.x = x;
         this.y = y;
     }
-    
+
     public Position(Position p) {
         x = p.x;
         y = p.y;
@@ -25,13 +25,17 @@ public class Position {
 
     public Position(Position p, Direction d) {
         this(p);
+        go(d);
+    }
+
+    public void go(Direction d) {
         if (d != null) {
             switch (d) {
                 case NORTH:
-                    x -= 1;
+                    y -= 1;
                     break;
                 case WEST:
-                    y -= 1;
+                    x -= 1;
                     break;
                 case SOUTH:
                     y += 1;
