@@ -4,7 +4,6 @@
  */
 package com.nettomailancia.sobrevivenciajurassica;
 
-import java.util.Random;
 
 /**
  *

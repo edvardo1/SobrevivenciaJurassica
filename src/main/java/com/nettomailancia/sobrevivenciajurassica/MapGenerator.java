@@ -5,7 +5,6 @@
 package com.nettomailancia.sobrevivenciajurassica;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  *
@@ -13,14 +12,13 @@ import java.util.Random;
  */
 abstract public class MapGenerator {
     static public void caveGenerate(Game game, int difficulty) throws Exception {
-        Random r = new Random();
         TileMap tilemap = new TileMap(20, 10);
         Player player = new Player(difficulty);
         ArrayList<Position> freePositions = new ArrayList<Position>();
 
         for (int y = 0; y < tilemap.getHeight(); y += 1) {
             for (int x = 0; x < tilemap.getWidth(); x += 1) {
-                int i = r.nextInt(100);
+                int i = Rng.getInstance().nextInt(100);
                 if (i < 20) {
                     tilemap.setTile(x, y, new Wall());
                 } else {
@@ -47,7 +45,7 @@ abstract public class MapGenerator {
         chosenItems.add(new Shock());
 
         for (Dinosaur dino : chosenDinos) {
-            int index = r.nextInt(freePositions.size());
+            int index = Rng.getInstance().nextInt(freePositions.size());
             Position position = freePositions.get(index);
             freePositions.remove(index);
             FreeTile t = (FreeTile) tilemap.getTile(position);
@@ -57,7 +55,7 @@ abstract public class MapGenerator {
         }
         
         for (Supply supply : chosenItems) {
-            int index = r.nextInt(freePositions.size());
+            int index = Rng.getInstance().nextInt(freePositions.size());
             Position position = freePositions.get(index);
             freePositions.remove(index);
             FreeTile t = (FreeTile) tilemap.getTile(position);

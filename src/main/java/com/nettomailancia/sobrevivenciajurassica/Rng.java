@@ -17,6 +17,7 @@ public class Rng {
 
     private Rng() {
         random = new Random();
+        random.setSeed(0);
     }
 
     public static Rng getInstance() {
@@ -28,5 +29,9 @@ public class Rng {
 
     public int dice(int sides) {
         return 1 + random.nextInt(sides);
+    }
+    
+    public int nextInt(int i) {
+        return random.nextInt(i);
     }
 }
