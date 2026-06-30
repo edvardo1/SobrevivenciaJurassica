@@ -5,25 +5,20 @@
 package com.nettomailancia.sobrevivenciajurassica;
 
 import java.util.Random;
-import java.util.Scanner;
 
 /**
  *
  * @author joaop
  */
 public class Player extends Entity {
-
-    private int posX;
-    private int posY;
+    static final int MAX_HP = 5;
     private int perception;
     private int medkits;
     private int darts;
     private boolean shockBat;
 
-    Player(int x, int y, int difficulty) {
-        this.setHp(5);
-        posX = x;
-        posY = y;
+    Player(int difficulty) {
+        setHp(MAX_HP);
         perception = difficulty;
         medkits = 0;
         darts = 0;
@@ -33,57 +28,6 @@ public class Player extends Entity {
     @Override
     public char getChar() {
         return '@';
-    }
-
-    @Override
-    public boolean move(Direction d, TileMap tm) {
-        try {
-            FreeTile currentTile = (FreeTile) tm.getTile(posX, posY);
-            int newX = posX;
-            int newY = posY;
-            if (null != d) {
-                switch (d) {
-                    case NORTH:
-                        newY -= 1;
-                        break;
-                    case WEST:
-                        newX -= 1;
-                        break;
-                    case SOUTH:
-                        newY += 1;
-                        break;
-                    case EAST:
-                        newX += 1;
-                        break;
-                    default:
-                        break;
-                }
-            }
-            boolean inBoundsX = 0 <= newX && newX <= tm.getWidth();
-            boolean inBoundsY = 0 <= newY && newY <= tm.getHeight();
-            if (!inBoundsX || !inBoundsY) {
-                return false;
-            }
-            Tile nextTile = tm.getTile(newX, newY);
-            if (nextTile == null) {
-                throw new Exception("what");
-            }
-            if (nextTile instanceof Wall) {
-                return false;
-            }
-            FreeTile nextFreeTile = (FreeTile) nextTile;
-            if (nextFreeTile.isOccupied()) {
-                return false;
-            }
-
-            posX = newX;
-            posY = newY;
-            currentTile.setEntity(null);
-            nextFreeTile.setEntity(this);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
     }
 
     public void addDarts(int amount) {
@@ -108,6 +52,14 @@ public class Player extends Entity {
 
     public boolean hasShock() {
         return shockBat;
+    }
+
+    public int getPerception() {
+        return perception;
+    }
+
+    public void setPerception(int perception) {
+        this.perception = perception;
     }
 
     public void attack(Dinosaur enemy, int choice) {
@@ -160,19 +112,14 @@ public class Player extends Entity {
     }
 
     public Boolean dodge() {
-        Random d3 = new Random();
-        int result = d3.nextInt(3);
-        if (result <= this.perception) {
-            System.out.println("O dinosauro erra!");
+        if (Rng.getInstance().dice(3) <= this.getPerception()) {
             return true;
         } else {
-            System.out.println("O dinosauro acerta um golpe!");
-            //damage(1);
             return false;
         }
     }
 
     public void heal() {
-        //hp = 5;
+        setHp(Math.max(getHp() + 1, MAX_HP));
     }
 }
