@@ -27,6 +27,7 @@ public class Battle {
         boolean validOption = true;
         do {
             validOption = true;
+            System.out.println("Sua vida: " + player.getHp());
             System.out.println("Opcoes:");
             System.out.println("r. Fugir");
             if (player.hasShock()) {
