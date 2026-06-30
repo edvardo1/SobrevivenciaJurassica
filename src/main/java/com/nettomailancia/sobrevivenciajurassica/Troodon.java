@@ -6,11 +6,11 @@ package com.nettomailancia.sobrevivenciajurassica;
 
 /**
  *
- * @author joaop
+ * @author ebm
  */
-public class Troodont extends Dinosaur {
+public class Troodon extends Dinosaur {
 
-    Troodont() {
+    Troodon() {
         this.setHp(2);
     }
 
