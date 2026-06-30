@@ -11,6 +11,10 @@ package com.nettomailancia.sobrevivenciajurassica;
 abstract public class Dinosaur extends Entity {
     
     abstract String getName();
+    
+    public void think(Game game, Player p, TileMap tm) {
+         /* brainless */
+    }
 
     public void attackPlayer(Player player) {
         player.setHp(player.getHp() - 1);
