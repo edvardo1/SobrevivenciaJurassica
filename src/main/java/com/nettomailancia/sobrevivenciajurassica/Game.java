@@ -222,6 +222,11 @@ public class Game {
             running = false;
             return;
         }
+        if (dinos.size() <= 0) {
+            System.out.println("Voce conseguiu matar todos os dinossauros!");
+            running = false;
+            return;
+        }
 
         if (getBattle() != null && getBattle().isOver()) {
             try {
