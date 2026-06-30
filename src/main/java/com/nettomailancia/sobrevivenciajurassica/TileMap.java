@@ -34,17 +34,25 @@ public class TileMap {
         return height;
     }
 
+    public Tile getTile(Position p) throws Exception {
+        return getTile(p.getX(), p.getY());
+    }
+
+    public void setTile(Position p, Tile t) throws Exception {
+        setTile(p.getX(), p.getY(), t);
+    }
+
     public Tile getTile(int x, int y) throws Exception {
-        if (0 <= x && x <= width && 0 <= y && y <= height) {
-            return tiles[y * width + x];
+        if (0 <= y && y <= height && 0 <= x && x <= width) {
+            return getTile(y * width + x);
         } else {
             throw new Exception("out of bounds");
         }
     }
 
     public void setTile(int x, int y, Tile t) throws Exception {
-        if (0 <= x && x <= width && 0 <= y && y <= height) {
-            tiles[y * width + x] = t;
+        if (0 <= y && y <= height && 0 <= x && x <= width) {
+            setTile(y * width + x, t);
         } else {
             throw new Exception("out of bounds");
         }

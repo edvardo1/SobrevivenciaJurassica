@@ -13,4 +13,8 @@ abstract public class Tile {
     abstract char getChar();
 
     abstract boolean isOccupied();
+
+    public Entity getEntity() {
+        return null;
+    }
 }
