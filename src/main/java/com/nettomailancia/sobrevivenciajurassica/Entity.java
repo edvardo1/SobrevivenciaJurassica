@@ -12,6 +12,10 @@ abstract public class Entity {
 
     protected int hp;
 
+    void Entity(int life) {
+        hp = life;
+    }
+
     abstract boolean move(Direction d, TileMap tm);
 
     abstract void damage(int d);
