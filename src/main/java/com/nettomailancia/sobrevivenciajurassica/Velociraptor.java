@@ -9,17 +9,12 @@ package com.nettomailancia.sobrevivenciajurassica;
  * @author joaop
  */
 public class Velociraptor extends Dinosaur {
-    Velociraptor (){
+
+    Velociraptor() {
         hp = 2;
     }
+
     public char getChar() {
         return 'T';
     }
-    void move (){
-        
-    }
-    void damage(int d){
-        this.hp -= d;
-    }
-    
 }

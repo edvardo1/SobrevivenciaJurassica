@@ -9,16 +9,13 @@ package com.nettomailancia.sobrevivenciajurassica;
  * @author joaop
  */
 public class Compsognathus extends Dinosaur {
+
     Compsognathus() {
         hp = 1;
     }
+
+    @Override
     char getChar() {
         return 'C';
-    }
-    void move (){
-        
-    }
-    void damage(int d){
-        this.hp -= d;
     }
 }

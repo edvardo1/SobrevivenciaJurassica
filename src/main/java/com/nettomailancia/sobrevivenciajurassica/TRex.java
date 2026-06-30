@@ -8,18 +8,13 @@ package com.nettomailancia.sobrevivenciajurassica;
  *
  * @author joaop
  */
-public class TRex extends Dinosaur{
+public class TRex extends Dinosaur {
+
     TRex() {
         hp = 3;
     }
-    
+
     public char getChar() {
         return 'R';
-    }
-    void move (){
-        
-    }
-    void damage(int d){
-        this.hp -= d;
     }
 }

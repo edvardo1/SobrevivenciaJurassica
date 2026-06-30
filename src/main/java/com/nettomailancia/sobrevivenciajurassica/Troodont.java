@@ -9,16 +9,20 @@ package com.nettomailancia.sobrevivenciajurassica;
  * @author joaop
  */
 public class Troodont extends Dinosaur {
+
     Troodont() {
         hp = 2;
     }
+
     public char getChar() {
         return 'T';
     }
-    void move (){
-        
+
+    void move() {
+
     }
-    void damage(int d){
+
+    void damage(int d) {
         this.hp -= d;
     }
 }
