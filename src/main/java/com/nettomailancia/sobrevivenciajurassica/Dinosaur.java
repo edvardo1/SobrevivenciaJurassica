@@ -12,26 +12,49 @@ abstract public class Dinosaur extends Entity {
 
     abstract String getName();
 
-    public void tryMoveDir(Game game, Player p, TileMap tm, Direction d) {
+    public boolean tryMoveDir(Game game, Player p, TileMap tm, Direction d) {
         Position nextPosition = new Position(getPosition(), d);
-        if (nextPosition.equals(getPosition()) && game.getBattle() == null) {
-            game.setBattle(new Battle(p, this, true));
+        boolean inX = 0 <= nextPosition.getX() && nextPosition.getX() < tm.getWidth();
+        boolean inY = 0 <= nextPosition.getY() && nextPosition.getY() < tm.getHeight();
+        if (inX && inY) {
+            if (nextPosition.equals(p.getPosition()) && game.getBattle() == null) {
+                game.setBattle(new Battle(p, this, true));
+                return false;
+            } else {
+                FreeTile ft = null, currentFt = null;
+                try {
+                    Tile t = tm.getTile(nextPosition);
+                    if (!t.isOccupied()) {
+                        ft = (FreeTile) t;
+                        currentFt = (FreeTile) tm.getTile(getPosition());
+                    }
+                } catch (Exception e) {
+                }
+                if (ft != null && currentFt != null) {
+                    ft.setEntity(this);
+                    currentFt.setEntity(null);
+                    setPosition(nextPosition);
+                    return true;
+                }
+            }
         }
+        return false;
     }
 
-    public void think(Game game, Player p, TileMap tm) {
-        Direction d = Direction.NORTH;
+    public boolean think(Game game, Player p, TileMap tm) {
+        Direction d = null;
         int i = Rng.getInstance().dice(4);
         if (i == 1) {
             d = Direction.NORTH;
         } else if (i == 2) {
-            d = Direction.SOUTH;
+            d = Direction.WEST;
         } else if (i == 3) {
             d = Direction.EAST;
         } else if (i == 4) {
             d = Direction.SOUTH;
         }
-        tryMoveDir(game, p, tm, d);
+        assert (d != null);
+        return tryMoveDir(game, p, tm, d);
     }
 
     public void attackPlayer(Player player) {

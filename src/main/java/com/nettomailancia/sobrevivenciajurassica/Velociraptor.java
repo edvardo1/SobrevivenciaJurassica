@@ -14,6 +14,14 @@ public class Velociraptor extends Dinosaur {
         this.setHp(2);
     }
 
+    public boolean think(Game game, Player p, TileMap tm) {
+        boolean can_move_again = super.think(game, p, tm);
+        if (can_move_again) {
+            return super.think(game, p, tm);
+        }
+        return can_move_again;
+    }
+
     @Override
     public String getName() {
         return "Velociraptor";
@@ -21,7 +29,7 @@ public class Velociraptor extends Dinosaur {
 
     @Override
     public char getChar() {
-        return 'T';
+        return 'V';
     }
     
     @Override

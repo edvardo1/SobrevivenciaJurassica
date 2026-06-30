@@ -15,16 +15,33 @@ public class Troodon extends Dinosaur {
     }
 
     @Override
+    public boolean think(Game game, Player p, TileMap tm) {
+        Direction d = null;
+        int distance_x = p.getPosition().getX() - getPosition().getX();
+        int distance_y = p.getPosition().getY() - getPosition().getY();
+        if (Math.abs(distance_x) >= Math.abs(distance_y)) {
+            if (distance_x > 0) {
+                d = Direction.EAST;
+            } else {
+                d = Direction.WEST;
+            }
+        } else {
+            if (distance_y > 0) {
+                d = Direction.NORTH;
+            } else {
+                d = Direction.SOUTH;
+            }
+        }
+        return tryMoveDir(game, p, tm, d);
+    }
+
+    @Override
     public char getChar() {
         return 'T';
     }
-    
+
     @Override
     public String getName() {
         return "Troodonte";
-    }
-
-    void move() {
-
     }
 }

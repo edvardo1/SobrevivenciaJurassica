@@ -14,6 +14,11 @@ public class TRex extends Dinosaur {
         this.setHp(3);
     }
     
+    @Override
+    public boolean think(Game game, Player p, TileMap tm) {
+        /* dumb */
+        return false;
+    }
         
     @Override
     public String getName() {
