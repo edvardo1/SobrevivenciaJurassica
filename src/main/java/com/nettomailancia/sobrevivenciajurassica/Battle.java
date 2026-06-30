@@ -29,7 +29,11 @@ public class Battle {
             validOption = true;
             System.out.println("Opcoes:");
             System.out.println("r. Fugir");
-            System.out.println("p. Lutar com punhos");
+            if (player.hasShock()) {
+                System.out.println("p. Lutar com punhos");
+            } else {
+                System.out.println("p. Lutar com bastao de choque");
+            }
             if (player.hasDarts()) {
                 System.out.println("d. Atirar dardo");
             }
