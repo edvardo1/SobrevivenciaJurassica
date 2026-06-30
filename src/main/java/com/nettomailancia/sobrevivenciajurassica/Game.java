@@ -20,62 +20,12 @@ public class Game {
     private Battle battle;
     private boolean onDebugMode;
 
-    private void generate(int difficulty) throws Exception {
-        Random r = new Random();
-        tilemap = new TileMap(20, 10);
-        ArrayList<Position> freePositions = new ArrayList<Position>();
-
-        for (int y = 0; y < tilemap.getHeight(); y += 1) {
-            for (int x = 0; x < tilemap.getWidth(); x += 1) {
-                int i = r.nextInt(100);
-                if (i < 20) {
-                    tilemap.setTile(x, y, new Wall());
-                } else {
-                    tilemap.setTile(x, y, new FreeTile());
-                    freePositions.add(new Position(x, y));
-                }
-            }
-        }
-
-        ArrayList<Dinosaur> chosenDinos = new ArrayList<Dinosaur>();
-        for (int i = 0; i < 5; i += 1) {
-            chosenDinos.add(new Troodont());
-        }
-        for (int i = 0; i < 2; i += 1) {
-            chosenDinos.add(new Compsognathus());
-        }
-        for (int i = 0; i < 2; i += 1) {
-            chosenDinos.add(new Velociraptor());
-        }
-        for (Dinosaur dino : chosenDinos) {
-            int index = r.nextInt(freePositions.size());
-            Position position = freePositions.get(index);
-            freePositions.remove(index);
-            FreeTile t = (FreeTile) tilemap.getTile(position);
-            dino.setPosition(position);
-            t.setEntity(dino);
-
-        }
-
-        if (tilemap.getTile(0, 0).isOccupied()) {
-            throw new Exception("wow");
-        }
-        player = new Player(3);
-        tilemap.setTile(0, 0, new FreeTile(player));
-        player.setPosition(new Position(0, 0));
-
-        if (tilemap.getTile(tilemap.getWidth() - 1, tilemap.getHeight() - 1).isOccupied()) {
-            throw new Exception("wow");
-        }
-        tilemap.setTile(tilemap.getWidth() - 1, tilemap.getHeight() - 1, new FreeTile(new TRex()));
-    }
-
     public Game() {
         boolean rerun = false;
         do {
             rerun = false;
             try {
-                generate(0);
+                MapGenerator.caveGenerate(this, 0);
             } catch (Exception ex) {
                 System.out.println("failed!, doing it again!");
                 rerun = true;
@@ -90,16 +40,16 @@ public class Game {
 
     public boolean tryMove(Direction d) {
         try {
-            Position nextPosition = new Position(player.getPosition(), d);
-            Tile tile = tilemap.getTile(nextPosition);
+            Position nextPosition = new Position(getPlayer().getPosition(), d);
+            Tile tile = getTilemap().getTile(nextPosition);
 
             if (!tile.isOccupied()) {
-                return player.move(nextPosition, tilemap);
+                return getPlayer().move(nextPosition, getTilemap());
             } else {
                 Entity e = tile.getEntity();
                 if (e != null) {
                     Dinosaur dino = (Dinosaur) e;
-                    battle = new Battle(player, dino, false);
+                    battle = new Battle(getPlayer(), dino, false);
                     battle.turn();
                     return true;
                 }
@@ -117,53 +67,75 @@ public class Game {
 
     private void fillChar(char[] c, Position p) {
         try {
-            c[p.getY() * tilemap.getWidth() + p.getX()] = tilemap.getTile(p).getChar();
+            c[p.getY() * getTilemap().getWidth() + p.getX()] = getTilemap().getTile(p).getChar();
         } catch (Exception e) {
         }
     }
 
-    private void fillChars(char[] c, Direction d, Position orig) {
-        try {
-            Position p = new Position(orig);
-            p.go(d);
-            while (!tilemap.getTile(p).isOccupied()) {
-                fillChar(c, p);
-                p.go(d);
+    private void castRay(Position orig, char[] c, double angle) {
+        double x = orig.getX() + 0.5;
+        double y = orig.getY() + 0.5;
+        double dx = Math.cos(angle) * 0.3;
+        double dy = Math.sin(angle) * 0.3;
+        boolean running = true;
+        while (Math.floor(x) == orig.getX() && Math.floor(y) == orig.getY()) {
+            x += dx;
+            y += dy;
+        }
+            
+        while (running) {
+            int fx = (int) Math.floor(x);
+            int fy = (int) Math.floor(y);
+            if (!(0 <= fx && fx < tilemap.getWidth())) {
+                break;
             }
-            fillChar(c, p);
-        } catch (Exception e) {
-            System.out.println("[ERROR] exception!");
+            if (!(0 <= fy && fy < tilemap.getHeight())) {
+                break;
+            }
+            Position fpos = new Position(fx, fy);
+            fillChar(c, fpos);
+            try {
+                if (tilemap.getTile(fpos).isOccupied()) {
+                    running = false;
+                }
+            } catch (Exception e) {
+                running = false;
+            }
+            x += dx;
+            y += dy;
         }
     }
 
     private void showMap() {
-        char[] c = new char[tilemap.getWidth() * tilemap.getHeight()];
+        char[] c = new char[getTilemap().getWidth() * getTilemap().getHeight()];
         try {
             if (onDebugMode) {
-                for (int y = 0; y < tilemap.getHeight(); y += 1) {
-                    for (int x = 0; x < tilemap.getWidth(); x += 1) {
-                        c[y * tilemap.getWidth() + x] = tilemap.getTile(new Position(x, y)).getChar();
+                for (int y = 0; y < getTilemap().getHeight(); y += 1) {
+                    for (int x = 0; x < getTilemap().getWidth(); x += 1) {
+                        c[y * getTilemap().getWidth() + x] = getTilemap().getTile(new Position(x, y)).getChar();
                     }
                 }
             } else {
-                for (int y = 0; y < tilemap.getHeight(); y += 1) {
-                    for (int x = 0; x < tilemap.getWidth(); x += 1) {
-                        c[y * tilemap.getWidth() + x] = ' ';
+                Position ppos = getPlayer().getPosition();
+                int px = getPlayer().getPosition().getX();
+                int py = getPlayer().getPosition().getY();
+                for (int y = 0; y < getTilemap().getHeight(); y += 1) {
+                    for (int x = 0; x < getTilemap().getWidth(); x += 1) {
+                        c[y * getTilemap().getWidth() + x] = ' ';
                     }
                 }
-
-                fillChar(c, player.getPosition());
-                fillChars(c, Direction.NORTH, player.getPosition());
-                fillChars(c, Direction.WEST, player.getPosition());
-                fillChars(c, Direction.SOUTH, player.getPosition());
-                fillChars(c, Direction.EAST, player.getPosition());
+                
+                for (double angle = 0.0; angle < 2 * 3.14; angle += 0.1) {
+                    castRay(ppos, c, angle);
+                }
+                fillChar(c, getPlayer().getPosition());
             }
         } catch (Exception ex) {
         }
 
-        for (int y = 0; y < tilemap.getHeight(); y += 1) {
-            for (int x = 0; x < tilemap.getWidth(); x += 1) {
-                System.out.print(c[y * tilemap.getWidth() + x]);
+        for (int y = 0; y < getTilemap().getHeight(); y += 1) {
+            for (int x = 0; x < getTilemap().getWidth(); x += 1) {
+                System.out.print(c[y * getTilemap().getWidth() + x]);
             }
             System.out.print("\n");
         }
@@ -196,16 +168,32 @@ public class Game {
         }
     }
 
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public TileMap getTilemap() {
+        return tilemap;
+    }
+
+    public void setTilemap(TileMap tilemap) {
+        this.tilemap = tilemap;
+    }
+
     public void run() {
         if (battle != null && battle.isOver()) {
             try {
-                FreeTile ft = (FreeTile) tilemap.getTile(battle.getFoe().getPosition());
+                FreeTile ft = (FreeTile) getTilemap().getTile(battle.getFoe().getPosition());
                 ft.setEntity(null);
             } catch (Exception e) {
             }
             battle = null;
         }
-        
+
         showMap();
 
         if (battle == null) {
