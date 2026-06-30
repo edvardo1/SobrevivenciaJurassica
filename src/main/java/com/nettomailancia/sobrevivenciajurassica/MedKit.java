@@ -9,6 +9,10 @@ package com.nettomailancia.sobrevivenciajurassica;
  * @author joaop
  */
 public class MedKit extends Supply {
+
+    MedKit() {
+    }
+
     @Override
     public boolean onPlayerMovement(Player p, FreeTile myTile) {
         p.hp += 1;

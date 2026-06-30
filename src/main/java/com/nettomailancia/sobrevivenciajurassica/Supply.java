@@ -9,5 +9,6 @@ package com.nettomailancia.sobrevivenciajurassica;
  * @author joaop
  */
 abstract public class Supply {
+
     abstract public boolean onPlayerMovement(Player player, FreeTile myTile);
 }
