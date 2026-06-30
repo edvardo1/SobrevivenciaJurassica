@@ -14,7 +14,7 @@ public class MedKit extends Supply {
     }
 
     @Override
-    public boolean onPlayerMovement(Player p, FreeTile myTile) {
+    public boolean onPlayerMovement(Game game, Player p, Position tilePosition, FreeTile myTile) {
         p.setHp(p.getHp() + 1);
         myTile.setSupply(null);
         return true;

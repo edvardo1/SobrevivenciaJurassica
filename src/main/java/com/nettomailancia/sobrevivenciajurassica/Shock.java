@@ -14,7 +14,7 @@ public class Shock extends Supply {
     }
 
     @Override
-    public boolean onPlayerMovement(Player p, FreeTile myTile) {
+    public boolean onPlayerMovement(Game game, Player p, Position tilePosition, FreeTile myTile) {
         p.acquireShock();
         myTile.setSupply(null);
         return true;

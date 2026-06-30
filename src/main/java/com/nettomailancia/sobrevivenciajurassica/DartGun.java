@@ -11,7 +11,7 @@ package com.nettomailancia.sobrevivenciajurassica;
 public class DartGun extends Supply {
 
     @Override
-    public boolean onPlayerMovement(Player p, FreeTile myTile) {
+    public boolean onPlayerMovement(Game game, Player p, Position tilePosition, FreeTile myTile) {
         p.addDarts(5);
         myTile.setSupply(null);
         return true;

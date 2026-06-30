@@ -4,8 +4,6 @@
  */
 package com.nettomailancia.sobrevivenciajurassica;
 
-import java.util.ArrayList;
-import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -44,13 +42,22 @@ public class Game {
             Tile tile = getTilemap().getTile(nextPosition);
 
             if (!tile.isOccupied()) {
-                return getPlayer().move(nextPosition, getTilemap());
+                Supply item = ((FreeTile) tile).getSupply();
+                boolean canMove = true;
+                if (item != null) {
+                    canMove = item.onPlayerMovement(this, player, nextPosition, (FreeTile) tile);
+                }
+                if (canMove) {
+                    return getPlayer().move(nextPosition, getTilemap());
+                } else {
+                    return false;
+                }
             } else {
                 Entity e = tile.getEntity();
                 if (e != null) {
                     Dinosaur dino = (Dinosaur) e;
-                    battle = new Battle(getPlayer(), dino, false);
-                    battle.turn();
+                    setBattle(new Battle(getPlayer(), dino, false));
+                    getBattle().turn();
                     return true;
                 }
             }
@@ -62,7 +69,7 @@ public class Game {
     }
 
     private void turnBattle() {
-        battle.turn();
+        getBattle().turn();
     }
 
     private void fillChar(char[] c, Position p) {
@@ -75,14 +82,14 @@ public class Game {
     private void castRay(Position orig, char[] c, double angle) {
         double x = orig.getX() + 0.5;
         double y = orig.getY() + 0.5;
-        double dx = Math.cos(angle) * 0.3;
-        double dy = Math.sin(angle) * 0.3;
+        double dx = Math.cos(angle) * 0.1;
+        double dy = Math.sin(angle) * 0.1;
         boolean running = true;
         while (Math.floor(x) == orig.getX() && Math.floor(y) == orig.getY()) {
             x += dx;
             y += dy;
         }
-            
+
         while (running) {
             int fx = (int) Math.floor(x);
             int fy = (int) Math.floor(y);
@@ -124,7 +131,7 @@ public class Game {
                         c[y * getTilemap().getWidth() + x] = ' ';
                     }
                 }
-                
+
                 for (double angle = 0.0; angle < 2 * 3.14; angle += 0.1) {
                     castRay(ppos, c, angle);
                 }
@@ -135,7 +142,13 @@ public class Game {
 
         for (int y = 0; y < getTilemap().getHeight(); y += 1) {
             for (int x = 0; x < getTilemap().getWidth(); x += 1) {
-                System.out.print(c[y * getTilemap().getWidth() + x]);
+                char ch = c[y * getTilemap().getWidth() + x];
+                if (ch == '#') {
+                    System.out.print("\033[90m");
+                } else {
+                    System.out.print("\033[0m");
+                }
+                System.out.print(ch);
             }
             System.out.print("\n");
         }
@@ -183,23 +196,31 @@ public class Game {
     public void setTilemap(TileMap tilemap) {
         this.tilemap = tilemap;
     }
+    
+    public Battle getBattle() {
+        return battle;
+    }
+
+    public void setBattle(Battle battle) {
+        this.battle = battle;
+    }
 
     public void run() {
-        if (battle != null && battle.isOver()) {
+        if (getBattle() != null && getBattle().isOver()) {
             try {
-                FreeTile ft = (FreeTile) getTilemap().getTile(battle.getFoe().getPosition());
+                FreeTile ft = (FreeTile) getTilemap().getTile(getBattle().getFoe().getPosition());
                 ft.setEntity(null);
             } catch (Exception e) {
             }
-            battle = null;
+            setBattle(null);
         }
 
         showMap();
 
-        if (battle == null) {
+        if (getBattle() == null) {
             turnExplore();
         } else {
-            System.out.println("is over: " + battle.isOver());
+            System.out.println("is over: " + getBattle().isOver());
             turnBattle();
         }
     }

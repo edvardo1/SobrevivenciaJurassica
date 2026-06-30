@@ -10,5 +10,5 @@ package com.nettomailancia.sobrevivenciajurassica;
  */
 abstract public class Supply {
 
-    abstract public boolean onPlayerMovement(Player player, FreeTile myTile);
+    abstract public boolean onPlayerMovement(Game game, Player player, Position tilePosition, FreeTile myTile);
 }

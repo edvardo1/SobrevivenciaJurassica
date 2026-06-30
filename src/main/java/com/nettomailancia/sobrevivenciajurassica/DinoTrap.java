@@ -17,9 +17,11 @@ public class DinoTrap extends Supply {
     }
 
     @Override
-    public boolean onPlayerMovement(Player p, FreeTile myTile) {
+    public boolean onPlayerMovement(Game game, Player player, Position tilePosition, FreeTile myTile) {
         myTile.setSupply(null);
         myTile.setEntity(dino);
+        dino.setPosition(tilePosition);
+        game.setBattle(new Battle(player, dino, true));
         return false;
     }
 }
