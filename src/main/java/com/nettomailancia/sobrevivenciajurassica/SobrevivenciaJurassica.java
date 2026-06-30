@@ -5,6 +5,7 @@ package com.nettomailancia.sobrevivenciajurassica;
 
 import java.util.Random;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * @author ebm
@@ -94,8 +95,31 @@ public class SobrevivenciaJurassica {
                 System.out.print("\n");
             }
             System.out.print("\n\n");
-            running = false;
         } catch (Exception ex) {
+        }
+
+        System.out.println("Opcoes:");
+        System.out.println("w. Norte");
+        System.out.println("a. Leste");
+        System.out.println("s. Sul");
+        System.out.println("d. Oeste");
+        System.out.println("c. Cura");
+        System.out.println("D. Debug");
+        System.out.println("q. Sair");
+        //create the Scanner
+        Scanner terminalInput = new Scanner(System.in);
+        //read input
+        String s = terminalInput.nextLine();
+        if (s.equals("w")) {
+            player.move(Direction.NORTH, tilemap);
+        } else if (s.equals("a")) {
+            player.move(Direction.WEST, tilemap);
+        } else if (s.equals("s")) {
+            player.move(Direction.SOUTH, tilemap);
+        } else if (s.equals("d")) {
+            player.move(Direction.EAST, tilemap);
+        } else if (s.equals("q")) {
+            running = false;
         }
     }
 
