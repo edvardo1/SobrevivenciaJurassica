@@ -11,7 +11,7 @@ package com.nettomailancia.sobrevivenciajurassica;
 public class Compsognathus extends Dinosaur {
 
     Compsognathus() {
-        hp = 1;
+        this.setHp(1);
     }
 
     @Override
