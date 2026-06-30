@@ -22,10 +22,6 @@ abstract public class Entity {
 
     abstract char getChar();
 
-    void Entity(int life) {
-        hp = life;
-    }
-
     int getHp() {
         return hp;
     }
