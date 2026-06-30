@@ -15,6 +15,7 @@ public class MedKit extends Supply {
 
     @Override
     public boolean onPlayerMovement(Game game, Player p, Position tilePosition, FreeTile myTile) {
+        System.out.println("Voce adquiriu um medkit!");
         p.setHp(p.getHp() + 1);
         myTile.setSupply(null);
         return true;

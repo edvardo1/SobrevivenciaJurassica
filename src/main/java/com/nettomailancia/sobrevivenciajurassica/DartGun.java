@@ -12,6 +12,7 @@ public class DartGun extends Supply {
 
     @Override
     public boolean onPlayerMovement(Game game, Player p, Position tilePosition, FreeTile myTile) {
+        System.out.println("Voce adquiriu uma arma de dardos!");
         p.addDarts(5);
         myTile.setSupply(null);
         return true;

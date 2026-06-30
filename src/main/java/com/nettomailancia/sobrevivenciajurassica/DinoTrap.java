@@ -18,6 +18,7 @@ public class DinoTrap extends Supply {
 
     @Override
     public boolean onPlayerMovement(Game game, Player player, Position tilePosition, FreeTile myTile) {
+        System.out.println("A caixa era uma armadilha!");
         myTile.setSupply(null);
         myTile.setEntity(dino);
         dino.setPosition(tilePosition);
