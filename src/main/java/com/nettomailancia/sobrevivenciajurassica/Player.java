@@ -30,16 +30,60 @@ public class Player extends Entity {
         shockBat = false;
     }
 
+    @Override
     public char getChar() {
         return '@';
     }
 
-    public void move() {
-        System.out.println("Qual posição de destino? ");
-        Scanner scanner = new Scanner(System.in);
-        String tile = scanner.next();
-        System.out.println("Tile escolhido" + tile);
-        //continuar pra realmente mover no mapa
+    @Override
+    public boolean move(Direction d, TileMap tm) {
+        try {
+            FreeTile currentTile = (FreeTile) tm.getTile(posX, posY);
+            int newX = posX;
+            int newY = posY;
+            if (null != d) {
+                switch (d) {
+                    case NORTH:
+                        newY -= 1;
+                        break;
+                    case WEST:
+                        newX -= 1;
+                        break;
+                    case SOUTH:
+                        newY += 1;
+                        break;
+                    case EAST:
+                        newX += 1;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            boolean inBoundsX = 0 <= newX && newX <= tm.getWidth();
+            boolean inBoundsY = 0 <= newY && newY <= tm.getHeight();
+            if (!inBoundsX || !inBoundsY) {
+                return false;
+            }
+            Tile nextTile = tm.getTile(newX, newY);
+            if (nextTile == null) {
+                throw new Exception("what");
+            }
+            if (nextTile instanceof Wall) {
+                return false;
+            }
+            FreeTile nextFreeTile = (FreeTile) nextTile;
+            if (nextFreeTile.isOccupied()) {
+                return false;
+            }
+
+            posX = newX;
+            posY = newY;
+            currentTile.setEntity(null);
+            nextFreeTile.setEntity(this);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     void damage(int d) {
@@ -111,8 +155,10 @@ public class Player extends Entity {
         Random d3 = new Random();
         int result = d3.nextInt(3);
         if (result <= this.perception) {
+            System.out.println("O dinosauro erra!");
             return true;
         } else {
+            System.out.println("O dinosauro acerta um golpe!");
             damage(1);
             return false;
         }

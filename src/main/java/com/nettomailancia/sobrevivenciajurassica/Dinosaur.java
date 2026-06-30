@@ -9,5 +9,9 @@ package com.nettomailancia.sobrevivenciajurassica;
  * @author joaop
  */
 abstract public class Dinosaur extends Entity {
-    
+
+    @Override
+    boolean move(Direction d, TileMap tm) {
+        return false;
+    }
 }
