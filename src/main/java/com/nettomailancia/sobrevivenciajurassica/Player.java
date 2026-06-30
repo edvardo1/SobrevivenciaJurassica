@@ -62,7 +62,7 @@ public class Player extends Entity {
         this.perception = perception;
     }
 
-    public void attack(Dinosaur enemy, int choice) {
+   /* public void attack(Dinosaur enemy, int choice) {
         Random d6 = new Random();
         int result = d6.nextInt(6);
 
@@ -109,7 +109,7 @@ public class Player extends Entity {
                 }
                 break;
         }
-    }
+    }*/
 
     public Boolean dodge() {
         if (Rng.getInstance().dice(3) <= this.getPerception()) {

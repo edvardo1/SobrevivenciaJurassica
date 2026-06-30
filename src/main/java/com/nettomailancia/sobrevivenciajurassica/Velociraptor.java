@@ -23,4 +23,9 @@ public class Velociraptor extends Dinosaur {
     public char getChar() {
         return 'T';
     }
+    
+    @Override
+    public void damageDart() {
+        System.out.println("Velociraptor é muito agil e desvia do dardo!");
+    }
 }
