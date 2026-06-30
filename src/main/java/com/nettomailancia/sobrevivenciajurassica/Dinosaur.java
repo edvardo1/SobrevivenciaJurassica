@@ -14,8 +14,26 @@ abstract public class Dinosaur extends Entity {
     boolean move(Direction d, TileMap tm) {
         return false;
     }
-    
-    void damageHand() {}
-    void damageShockBaton() {}
-    void damageDart() {}
+
+    void damageHand() {
+        int points = Rng.getInstance().dice(6);
+        if (points == 6) {
+            this.setHp(this.getHp() - 2);
+        } else if (points > 2) {
+            this.setHp(this.getHp() - 1);
+        }
+    }
+
+    void damageShockBaton() {
+        int points = Rng.getInstance().dice(6);
+        if (points == 6) {
+            this.setHp(this.getHp() - 2);
+        } else if (points == 1) {
+            this.setHp(this.getHp() - 1);
+        }
+    }
+
+    void damageDart() {
+        this.setHp(this.getHp() - 2);
+    }
 }
