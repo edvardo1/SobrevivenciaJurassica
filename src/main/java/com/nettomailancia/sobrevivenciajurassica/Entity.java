@@ -9,8 +9,11 @@ package com.nettomailancia.sobrevivenciajurassica;
  * @author joaop
  */
 abstract public class Entity {
-    int hp;
+    protected int hp;
     
+    void Entity(int life) {
+        hp = life;
+    }
     abstract void move();
     abstract void damage(int d);
     abstract char getChar();

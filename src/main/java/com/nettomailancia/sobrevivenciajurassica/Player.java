@@ -111,8 +111,10 @@ public class Player extends Entity {
         Random d3 = new Random();
         int result = d3.nextInt(3);
         if (result <= this.perception) {
+            System.out.println("O dinosauro erra!");
             return true;
         } else {
+            System.out.println("O dinosauro acerta um golpe!");
             damage(1);
             return false;
         }
