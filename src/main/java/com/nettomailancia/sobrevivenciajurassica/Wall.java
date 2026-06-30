@@ -9,6 +9,7 @@ package com.nettomailancia.sobrevivenciajurassica;
  * @author ebm
  */
 public class Wall extends Tile {
+
     @Override
     boolean isOccupied() {
         return true;

@@ -9,26 +9,27 @@ package com.nettomailancia.sobrevivenciajurassica;
  * @author ebm
  */
 public class FreeTile extends Tile {
+
     private Entity entity;
     private Supply supply;
-    
+
     public FreeTile(Entity e, Supply s) {
         entity = e;
         supply = s;
     }
-    
+
     public FreeTile(Entity e) {
         this(e, null);
     }
-    
+
     public FreeTile(Supply s) {
         this(null, s);
     }
-    
+
     public FreeTile() {
         this(null, null);
     }
-    
+
     public Entity getEntity() {
         return entity;
     }
@@ -44,7 +45,7 @@ public class FreeTile extends Tile {
     public void setSupply(Supply supply) {
         this.supply = supply;
     }
-    
+
     @Override
     boolean isOccupied() {
         return this.getEntity() != null;

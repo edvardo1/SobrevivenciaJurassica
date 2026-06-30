@@ -9,6 +9,8 @@ package com.nettomailancia.sobrevivenciajurassica;
  * @author ebm
  */
 abstract public class Tile {
+
     abstract char getChar();
+
     abstract boolean isOccupied();
 }
