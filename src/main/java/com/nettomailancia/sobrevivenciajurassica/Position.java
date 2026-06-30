@@ -49,6 +49,10 @@ public class Position {
         }
     }
 
+    public boolean equals(Position other) {
+        return x == other.x && y == other.y;
+    }
+
     public int getX() {
         return x;
     }
