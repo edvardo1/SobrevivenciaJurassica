@@ -53,6 +53,7 @@ abstract public class MapGenerator {
             FreeTile t = (FreeTile) tilemap.getTile(position);
             dino.setPosition(position);
             t.setEntity(dino);
+            game.getDinos().add(dino);
         }
         
         for (Supply supply : chosenItems) {
@@ -73,7 +74,10 @@ abstract public class MapGenerator {
         if (tilemap.getTile(tilemap.getWidth() - 1, tilemap.getHeight() - 1).isOccupied()) {
             throw new Exception("wow");
         }
-        tilemap.setTile(tilemap.getWidth() - 1, tilemap.getHeight() - 1, new FreeTile(new TRex()));
+        TRex trex = new TRex();
+        trex.setPosition(new Position(tilemap.getWidth() - 1, tilemap.getHeight() - 1));
+        tilemap.setTile(tilemap.getWidth() - 1, tilemap.getHeight() - 1, new FreeTile(trex));
+        game.getDinos().add(trex);
         
         game.setTilemap(tilemap);
         game.setPlayer(player);

@@ -4,6 +4,7 @@
  */
 package com.nettomailancia.sobrevivenciajurassica;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -16,10 +17,12 @@ public class Game {
     private boolean running;
     private Player player;
     private Battle battle;
-    private boolean onDebugMode;
+    private boolean onDebugMode = true;
+    private ArrayList<Dinosaur> dinos;
 
     public Game() {
         boolean rerun = false;
+        dinos = new ArrayList<Dinosaur>();
         do {
             rerun = false;
             try {
@@ -196,7 +199,7 @@ public class Game {
     public void setTilemap(TileMap tilemap) {
         this.tilemap = tilemap;
     }
-    
+
     public Battle getBattle() {
         return battle;
     }
@@ -205,10 +208,25 @@ public class Game {
         this.battle = battle;
     }
 
+    public ArrayList<Dinosaur> getDinos() {
+        return dinos;
+    }
+
+    public void setDinos(ArrayList<Dinosaur> dinos) {
+        this.dinos = dinos;
+    }
+
     public void run() {
+        if (player.getHp() <= 0) {
+            System.out.println("Voce esta morto!");
+            running = false;
+            return;
+        }
+
         if (getBattle() != null && getBattle().isOver()) {
             try {
                 FreeTile ft = (FreeTile) getTilemap().getTile(getBattle().getFoe().getPosition());
+                dinos.remove((Dinosaur) ft.getEntity());
                 ft.setEntity(null);
             } catch (Exception e) {
             }
@@ -222,6 +240,13 @@ public class Game {
         } else {
             System.out.println("is over: " + getBattle().isOver());
             turnBattle();
+        }
+
+        for (Dinosaur dino : dinos) {
+            boolean isFoe = battle != null && battle.getFoe() == dino;
+            if (!isFoe) {
+                dino.think(this, player, tilemap);
+            }
         }
     }
 }
