@@ -17,7 +17,7 @@ public class Game {
     private boolean running;
     private Player player;
     private Battle battle;
-    private boolean onDebugMode = true;
+    private boolean onDebugMode = false;
     private ArrayList<Dinosaur> dinos;
 
     public Game() {
