@@ -17,7 +17,6 @@ public class Rng {
 
     private Rng() {
         random = new Random();
-        random.setSeed(0);
     }
 
     public static Rng getInstance() {
