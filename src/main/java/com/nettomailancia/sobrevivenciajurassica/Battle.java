@@ -15,11 +15,16 @@ public class Battle {
     private Player player;
     private Dinosaur foe;
     boolean isAmbush;
+    boolean tryingToRunAway;
 
     public Battle(Player p, Dinosaur f, boolean ambush) {
         player = p;
         foe = f;
         isAmbush = ambush;
+    }
+
+    public boolean isTryingToRunAway() {
+        return tryingToRunAway;
     }
 
     private void playerTurn() {
@@ -41,7 +46,7 @@ public class Battle {
             String s = terminalInput.nextLine();
 
             if (s.equals("r")) {
-                /* run away */
+                tryingToRunAway = true;
             } else if (s.equals("p")) {
                 if (player.hasShock()) {
                     getFoe().damageShockBaton();

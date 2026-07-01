@@ -65,7 +65,6 @@ public class Game {
                 }
             }
         } catch (Exception e) {
-            System.out.println("exception");
             return false;
         }
         return false;
@@ -247,6 +246,24 @@ public class Game {
             turnExplore();
         } else {
             turnBattle();
+            if (battle.isTryingToRunAway()) {
+                Direction d = null;
+                int i = Rng.getInstance().dice(4);
+                if (i == 1) {
+                    d = Direction.NORTH;
+                } else if (i == 2) {
+                    d = Direction.WEST;
+                } else if (i == 3) {
+                    d = Direction.EAST;
+                } else if (i == 4) {
+                    d = Direction.SOUTH;
+                }
+                assert (d != null);
+                if (tryMove(d)) {
+                    System.out.println("Voce consegue escapar!");
+                    battle = null;
+                }
+            }
         }
 
         for (Dinosaur dino : dinos) {
