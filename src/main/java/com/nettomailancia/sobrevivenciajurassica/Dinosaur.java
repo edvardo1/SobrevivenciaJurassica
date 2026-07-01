@@ -32,6 +32,7 @@ abstract public class Dinosaur extends Entity {
                 }
                 if (ft != null && currentFt != null) {
                     ft.setEntity(this);
+                    assert(currentFt.getEntity() == this);
                     currentFt.setEntity(null);
                     setPosition(nextPosition);
                     return true;

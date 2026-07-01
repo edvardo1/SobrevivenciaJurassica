@@ -122,7 +122,8 @@ public class Game {
             if (onDebugMode) {
                 for (int y = 0; y < getTilemap().getHeight(); y += 1) {
                     for (int x = 0; x < getTilemap().getWidth(); x += 1) {
-                        c[y * getTilemap().getWidth() + x] = getTilemap().getTile(new Position(x, y)).getChar();
+                        Tile t = getTilemap().getTile(new Position(x, y));
+                        c[y * getTilemap().getWidth() + x] = t.getChar();
                     }
                 }
             } else {
@@ -245,7 +246,6 @@ public class Game {
         if (getBattle() == null) {
             turnExplore();
         } else {
-            System.out.println("is over: " + getBattle().isOver());
             turnBattle();
         }
 

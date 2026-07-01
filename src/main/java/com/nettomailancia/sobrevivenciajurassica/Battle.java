@@ -48,7 +48,6 @@ public class Battle {
                     getFoe().damageHand();
                 }
                 System.out.println("Voce atacou o " + getFoe().getName() + "!");
-                System.out.println("foehp: " + getFoe().getHp());
             } else if (player.hasDarts() && s.equals("d")) {
                 getFoe().damageDart();
                 player.loseDarts(1);
@@ -69,9 +68,8 @@ public class Battle {
     }
 
     public void turn() {
-        System.out.println("battle turn");
         if (isAmbush) {
-            System.out.println("AMBUSH!");
+            System.out.println("Algo te surpreende!!");
             foeTurn();
             isAmbush = false;
         } else {
