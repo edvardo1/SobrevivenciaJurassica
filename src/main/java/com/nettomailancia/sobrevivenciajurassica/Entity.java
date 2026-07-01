@@ -45,8 +45,8 @@ abstract public class Entity {
         try {
             FreeTile currentTile = getCurrentFreeTile(tm);
 
-            boolean inBoundsX = 0 <= newPosition.getX() && newPosition.getX() <= tm.getWidth();
-            boolean inBoundsY = 0 <= newPosition.getY() && newPosition.getY() <= tm.getHeight();
+            boolean inBoundsX = 0 <= newPosition.getX() && newPosition.getX() < tm.getWidth();
+            boolean inBoundsY = 0 <= newPosition.getY() && newPosition.getY() < tm.getHeight();
             if (!inBoundsX || !inBoundsY) {
                 return false;
             }
