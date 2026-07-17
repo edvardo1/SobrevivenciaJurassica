@@ -144,7 +144,7 @@ public class Game {
                     c[i] = ' ';
                 }
 
-                for (double angle = 0.0; angle < 2 * Math.PI; angle += 0.1) {
+                for (double angle = 0.0; angle < 2 * Math.PI; angle += 0.01) {
                     castRay(ppos, c, angle);
                 }
                 fillChar(c, player.getPosition());
