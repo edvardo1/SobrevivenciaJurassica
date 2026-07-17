@@ -18,7 +18,7 @@ abstract public class Dinosaur extends Entity {
         boolean inY = 0 <= nextPosition.getY() && nextPosition.getY() < tm.getHeight();
         if (inX && inY) {
             if (nextPosition.equals(p.getPosition()) && game.getBattle() == null) {
-                game.setBattle(new Battle(p, this, true));
+                game.setBattle(new Battle(game, p, this, true));
                 return false;
             } else {
                 FreeTile ft = null, currentFt = null;

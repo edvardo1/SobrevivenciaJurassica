@@ -22,7 +22,7 @@ public class DinoTrap extends Supply {
         myTile.setSupply(null);
         myTile.setEntity(dino);
         dino.setPosition(tilePosition);
-        game.setBattle(new Battle(player, dino, true));
+        game.setBattle(new Battle(game, player, dino, true));
         return false;
     }
 }

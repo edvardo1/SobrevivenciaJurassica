@@ -5,7 +5,6 @@
 package com.nettomailancia.sobrevivenciajurassica;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  *
@@ -13,6 +12,7 @@ import java.util.Scanner;
  */
 public class Game {
 
+    private final ArrayList<String> messages = new ArrayList<>();
     private TileMap tilemap;
     private boolean running;
     private Player player;
@@ -39,6 +39,21 @@ public class Game {
         return !running;
     }
 
+    public void addMessage(String message) {
+        messages.add(message);
+        while (messages.size() > 12) {
+            messages.remove(0);
+        }
+    }
+
+    public ArrayList<String> getMessages() {
+        return messages;
+    }
+
+    public void clearMessages() {
+        messages.clear();
+    }
+
     public boolean tryMove(Direction d) {
         try {
             Position nextPosition = new Position(getPlayer().getPosition(), d);
@@ -59,8 +74,8 @@ public class Game {
                 Entity e = tile.getEntity();
                 if (e != null) {
                     Dinosaur dino = (Dinosaur) e;
-                    setBattle(new Battle(getPlayer(), dino, false));
-                    getBattle().turn();
+                    setBattle(new Battle(this, getPlayer(), dino, false));
+                    getBattle().beginBattle();
                     return true;
                 }
             }
@@ -68,10 +83,6 @@ public class Game {
             return false;
         }
         return false;
-    }
-
-    private void turnBattle() {
-        getBattle().turn();
     }
 
     private void fillChar(char[] c, Position p) {
@@ -114,7 +125,6 @@ public class Game {
             y += dy;
         }
     }
-
 
     public char[] getVisibleMap() {
         char[] c = new char[tilemap.getWidth() * tilemap.getHeight()];
@@ -178,11 +188,13 @@ public class Game {
     }
 
     public void update() {
-        if (player.getHp() <= 0) {
+        if (player.getHp() < 0) {
+            addMessage("Você está morto!");
             running = false;
             return;
         }
         if (dinos.size() <= 0) {
+            addMessage("Você conseguiu matar todos os dinossauros!");
             running = false;
             return;
         }
@@ -197,23 +209,23 @@ public class Game {
             battle = null;
         }
 
-        if (battle != null) {
-            turnBattle();
-            if (battle.isTryingToRunAway()) {
-                Direction d = null;
-                switch (Rng.getInstance().dice(4)) {
-                    case 1 ->
-                        d = Direction.NORTH;
-                    case 2 ->
-                        d = Direction.WEST;
-                    case 3 ->
-                        d = Direction.EAST;
-                    case 4 ->
-                        d = Direction.SOUTH;
-                }
-                if (tryMove(d)) {
-                    battle = null;
-                }
+        if (battle != null && battle.isTryingToRunAway()) {
+            Direction d = null;
+
+            switch (Rng.getInstance().dice(4)) {
+                case 1 ->
+                    d = Direction.NORTH;
+                case 2 ->
+                    d = Direction.WEST;
+                case 3 ->
+                    d = Direction.EAST;
+                case 4 ->
+                    d = Direction.SOUTH;
+            }
+
+            if (tryMove(d)) {
+                addMessage("Você conseguiu escapar!");
+                battle = null;
             }
         }
         for (Dinosaur dino : dinos) {
@@ -229,20 +241,26 @@ public class Game {
             switch (key) {
                 case 'w':
                     tryMove(Direction.NORTH);
+                    addMessage("NORTE");
                     break;
                 case 'a':
                     tryMove(Direction.WEST);
+                    addMessage("OESTE");
                     break;
                 case 's':
                     tryMove(Direction.SOUTH);
+                    addMessage("SUL");
                     break;
                 case 'd':
                     tryMove(Direction.EAST);
+                    addMessage("LESTE");
                     break;
                 case 'c':
                     player.tryHeal();
+                    addMessage("CURA");
                     break;
                 case 'D':
+                    addMessage("toggle debug");
                     onDebugMode = !onDebugMode;
                     break;
                 case 'q':
@@ -250,7 +268,7 @@ public class Game {
                     return;
             }
         } else {
-            turnBattle();
+            battle.playerInput(key);
         }
         update();
     }

@@ -86,9 +86,7 @@ public class GameWindow extends JFrame {
         g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 16));
 
         for (int y = 0; y < mapHeight; y++) {
-
             for (int x = 0; x < mapWidth; x++) {
-
                 char c = map[y * mapWidth + x];
 
                 switch (c) {
@@ -107,7 +105,6 @@ public class GameWindow extends JFrame {
                     default:
                         g.setColor(Color.WHITE);
                         break;
-
                 }
 
                 g.drawString(
@@ -118,10 +115,14 @@ public class GameWindow extends JFrame {
             }
         }
         g.setColor(Color.YELLOW);
-        g.drawString(
-                "HP: " + game.getPlayer().getHp(),
-                10,
-                mapHeight * TILE_SIZE + 20
-        );
+        int infoY = mapHeight * TILE_SIZE + 20;
+
+        g.drawString("HP: " + game.getPlayer().getHp(), 10, infoY);
+
+        infoY += 25;
+        for (String message : game.getMessages()) {
+            g.drawString(message, 10, infoY);
+            infoY += 18;
+        }
     }
 }

@@ -4,20 +4,19 @@
  */
 package com.nettomailancia.sobrevivenciajurassica;
 
-import java.util.Scanner;
-
 /**
  *
  * @author joaop
  */
 public class Battle {
-
+    private final Game game;
     private Player player;
     private Dinosaur foe;
-    boolean isAmbush;
-    boolean tryingToRunAway;
+    private boolean isAmbush;
+    private boolean tryingToRunAway;
 
-    public Battle(Player p, Dinosaur f, boolean ambush) {
+    public Battle(Game g, Player p, Dinosaur f, boolean ambush) {
+        game = g;
         player = p;
         foe = f;
         isAmbush = ambush;
@@ -27,75 +26,69 @@ public class Battle {
         return tryingToRunAway;
     }
 
-    private void playerTurn() {
-        Scanner terminalInput = new Scanner(System.in);
-        boolean validOption = true;
-        do {
-            validOption = true;
-            System.out.println("Sua vida: " + player.getHp());
-            System.out.println("Opcoes:");
-            System.out.println("r. Fugir");
-            if (player.hasShock()) {
-                System.out.println("p. Lutar com bastao de choque");
-            } else {
-                System.out.println("p. Lutar com punhos");
-            }
-            if (player.hasDarts()) {
-                System.out.println("d. Atirar dardo");
-            }
-            String s = terminalInput.nextLine();
-
-            if (s.equals("r")) {
-                tryingToRunAway = true;
-            } else if (s.equals("p")) {
-                if (player.hasShock()) {
-                    getFoe().damageShockBaton();
-                } else {
-                    getFoe().damageHand();
-                }
-                System.out.println("Voce atacou o " + getFoe().getName() + "!");
-            } else if (player.hasDarts() && s.equals("d")) {
-                getFoe().damageDart();
-                player.loseDarts(1);
-            } else {
-                validOption = false;
-                System.out.println("Opcao invalida");
-            }
-        } while (!validOption);
-    }
-
-    private void foeTurn() {
-        if (getFoe().getHp() > 0) {
-            if (Rng.getInstance().dice(3) <= player.getPerception()) {
-                System.out.println("O " + getFoe().getName() + " te ataca!");
-                getFoe().attackPlayer(player);
-            }
-        }
-    }
-
-    public void turn() {
-        if (isAmbush) {
-            System.out.println("Algo te surpreende!!");
-            foeTurn();
-            isAmbush = false;
-        } else {
-            playerTurn();
-            foeTurn();
-        }
-        if (getFoe().getHp() <= 0) {
-            System.out.println("O " + getFoe().getName() + " esta morto.");
-        }
-    }
-
-    public boolean isOver() {
-        return player.getHp() <= 0 || getFoe().getHp() <= 0;
-    }
-
     public Dinosaur getFoe() {
         return foe;
     }
 
     public void setFoe(Dinosaur foe) {
         this.foe = foe;
+    }
+
+    public boolean isOver() {
+        return player.getHp() <= 0 || foe.getHp() <= 0;
+    }
+
+    public void playerInput(char key) {
+
+        tryingToRunAway = false;
+
+        switch (key) {
+
+            case 'r':
+                tryingToRunAway = true;
+                break;
+
+            case 'p':
+                if (player.hasShock()) {
+                    foe.damageShockBaton();
+                } else {
+                    foe.damageHand();
+                }
+                break;
+
+            case 'd':
+                if (player.hasDarts()) {
+                    foe.damageDart();
+                    player.loseDarts(1);
+                }
+                break;
+
+            default:
+                return;
+        }
+
+        foeTurn();
+
+        if (foe.getHp() <= 0) {
+            return;
+        }
+    }
+
+    private void foeTurn() {
+
+        if (foe.getHp() <= 0) {
+            return;
+        }
+
+        if (Rng.getInstance().dice(3) <= player.getPerception()) {
+            foe.attackPlayer(player);
+        }
+    }
+
+    public void beginBattle() {
+        if (isAmbush) {
+            foeTurn();
+            isAmbush = false;
+        }
     }
 }
