@@ -7,18 +7,31 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 
 public class GameWindow extends JFrame {
+
     private final Game game;
     private final JPanel panel;
+    private BufferedImage trexImage;
 
-    private static final int TILE_SIZE = 16;
+    private static final int TILE_SIZE = 32;
 
     public GameWindow(Game game) {
         this.game = game;
 
         setTitle("Sobrevivência Jurássica");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        try {
+            trexImage = ImageIO.read(
+                    getClass().getResource("/trex.png")
+            );
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         panel = new JPanel() {
             @Override
@@ -89,7 +102,7 @@ public class GameWindow extends JFrame {
         int mapWidth = game.getTilemap().getWidth();
         int mapHeight = game.getTilemap().getHeight();
 
-        g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 16));
+        g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 32));
 
         for (int y = 0; y < mapHeight; y++) {
             for (int x = 0; x < mapWidth; x++) {
@@ -102,12 +115,19 @@ public class GameWindow extends JFrame {
                     case '@':
                         g.setColor(Color.GREEN);
                         break;
-                    case 'T':
                     case 'R':
+                    case 'T':
                     case 'C':
                     case 'V':
-                        g.setColor(Color.RED);
-                        break;
+                        g.drawImage(
+                                trexImage,
+                                x * TILE_SIZE,
+                                y * TILE_SIZE,
+                                TILE_SIZE,
+                                TILE_SIZE,
+                                null
+                        );
+                        continue;
                     default:
                         g.setColor(Color.WHITE);
                         break;
