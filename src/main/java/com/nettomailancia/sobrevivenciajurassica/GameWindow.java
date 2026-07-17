@@ -57,6 +57,12 @@ public class GameWindow extends JFrame {
                     case KeyEvent.VK_G:
                         game.playerInput('D');
                         break;
+                    case KeyEvent.VK_P:
+                        game.playerInput('p');
+                        break;
+                    case KeyEvent.VK_R:
+                        game.playerInput('r');
+                        break;
                 }
 
                 if (game.quit()) {

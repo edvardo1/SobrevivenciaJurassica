@@ -9,6 +9,7 @@ package com.nettomailancia.sobrevivenciajurassica;
  * @author joaop
  */
 public class Battle {
+
     private final Game game;
     private Player player;
     private Dinosaur foe;
@@ -20,6 +21,7 @@ public class Battle {
         player = p;
         foe = f;
         isAmbush = ambush;
+        game.addMessage("Inicia-se uma batalha!");
     }
 
     public boolean isTryingToRunAway() {
@@ -39,49 +41,48 @@ public class Battle {
     }
 
     public void playerInput(char key) {
-
         tryingToRunAway = false;
-
         switch (key) {
-
             case 'r':
+                game.addMessage("Você tentou fugir!");
                 tryingToRunAway = true;
-                break;
-
+                return;
             case 'p':
                 if (player.hasShock()) {
                     foe.damageShockBaton();
+                    game.addMessage("Você atacou com o bastão de choque!");
                 } else {
                     foe.damageHand();
+                    game.addMessage("Você atacou com os punhos!");
                 }
                 break;
-
             case 'd':
                 if (player.hasDarts()) {
                     foe.damageDart();
                     player.loseDarts(1);
+                    game.addMessage("Você lançou um dardo!");
+                } else {
+                    game.addMessage("Você não tem dardos!");
+                    return;
                 }
                 break;
-
             default:
                 return;
         }
-
         foeTurn();
-
         if (foe.getHp() <= 0) {
-            return;
+            game.addMessage("O " + foe.getName() + " morreu!");
         }
     }
 
     private void foeTurn() {
-
         if (foe.getHp() <= 0) {
             return;
         }
 
         if (Rng.getInstance().dice(3) <= player.getPerception()) {
             foe.attackPlayer(player);
+            game.addMessage("O " + getFoe().getName() + " te ataca!");
         }
     }
 
