@@ -115,75 +115,34 @@ public class Game {
         }
     }
 
-    private void showMap() {
-        char[] c = new char[getTilemap().getWidth() * getTilemap().getHeight()];
+
+    public char[] getVisibleMap() {
+        char[] c = new char[tilemap.getWidth() * tilemap.getHeight()];
+
         try {
             if (onDebugMode) {
-                for (int y = 0; y < getTilemap().getHeight(); y += 1) {
-                    for (int x = 0; x < getTilemap().getWidth(); x += 1) {
-                        Tile t = getTilemap().getTile(new Position(x, y));
-                        c[y * getTilemap().getWidth() + x] = t.getChar();
+                for (int y = 0; y < tilemap.getHeight(); y++) {
+                    for (int x = 0; x < tilemap.getWidth(); x++) {
+                        Tile t = tilemap.getTile(new Position(x, y));
+                        c[y * tilemap.getWidth() + x] = t.getChar();
                     }
                 }
             } else {
-                Position ppos = getPlayer().getPosition();
-                int px = getPlayer().getPosition().getX();
-                int py = getPlayer().getPosition().getY();
-                for (int y = 0; y < getTilemap().getHeight(); y += 1) {
-                    for (int x = 0; x < getTilemap().getWidth(); x += 1) {
-                        c[y * getTilemap().getWidth() + x] = ' ';
-                    }
+                Position ppos = player.getPosition();
+
+                for (int i = 0; i < c.length; i++) {
+                    c[i] = ' ';
                 }
 
-                for (double angle = 0.0; angle < 2 * 3.14; angle += 0.1) {
+                for (double angle = 0.0; angle < 2 * Math.PI; angle += 0.1) {
                     castRay(ppos, c, angle);
                 }
-                fillChar(c, getPlayer().getPosition());
+                fillChar(c, player.getPosition());
             }
-        } catch (Exception ex) {
+        } catch (Exception e) {
         }
 
-        for (int y = 0; y < getTilemap().getHeight(); y += 1) {
-            for (int x = 0; x < getTilemap().getWidth(); x += 1) {
-                char ch = c[y * getTilemap().getWidth() + x];
-                if (ch == '#') {
-                    System.out.print("\033[90m");
-                } else {
-                    System.out.print("\033[0m");
-                }
-                System.out.print(ch);
-            }
-            System.out.print("\n");
-        }
-        System.out.print("\n\n");
-    }
-
-    private void turnExplore() {
-        System.out.println("Opcoes:");
-        System.out.println("w. Norte");
-        System.out.println("a. Leste");
-        System.out.println("s. Sul");
-        System.out.println("d. Oeste");
-        System.out.println("c. Cura");
-        System.out.println("D. Debug");
-        System.out.println("q. Sair");
-        Scanner terminalInput = new Scanner(System.in);
-        String s = terminalInput.nextLine();
-        if (s.equals("w")) {
-            tryMove(Direction.NORTH);
-        } else if (s.equals("a")) {
-            tryMove(Direction.WEST);
-        } else if (s.equals("s")) {
-            tryMove(Direction.SOUTH);
-        } else if (s.equals("d")) {
-            tryMove(Direction.EAST);
-        } else if (s.equals("c")) {
-            player.tryHeal();
-        } else if (s.equals("q")) {
-            running = false;
-        } else if (s.equals("D")) {
-            onDebugMode = !onDebugMode;
-        }
+        return c;
     }
 
     public Player getPlayer() {
@@ -218,59 +177,81 @@ public class Game {
         this.dinos = dinos;
     }
 
-    public void run() {
+    public void update() {
         if (player.getHp() <= 0) {
-            System.out.println("Voce esta morto!");
             running = false;
             return;
         }
         if (dinos.size() <= 0) {
-            System.out.println("Voce conseguiu matar todos os dinossauros!");
             running = false;
             return;
         }
 
-        if (getBattle() != null && getBattle().isOver()) {
+        if (battle != null && battle.isOver()) {
             try {
-                FreeTile ft = (FreeTile) getTilemap().getTile(getBattle().getFoe().getPosition());
+                FreeTile ft = (FreeTile) tilemap.getTile(battle.getFoe().getPosition());
                 dinos.remove((Dinosaur) ft.getEntity());
                 ft.setEntity(null);
             } catch (Exception e) {
             }
-            setBattle(null);
+            battle = null;
         }
 
-        showMap();
-
-        if (getBattle() == null) {
-            turnExplore();
-        } else {
+        if (battle != null) {
             turnBattle();
             if (battle.isTryingToRunAway()) {
                 Direction d = null;
-                int i = Rng.getInstance().dice(4);
-                if (i == 1) {
-                    d = Direction.NORTH;
-                } else if (i == 2) {
-                    d = Direction.WEST;
-                } else if (i == 3) {
-                    d = Direction.EAST;
-                } else if (i == 4) {
-                    d = Direction.SOUTH;
+                switch (Rng.getInstance().dice(4)) {
+                    case 1 ->
+                        d = Direction.NORTH;
+                    case 2 ->
+                        d = Direction.WEST;
+                    case 3 ->
+                        d = Direction.EAST;
+                    case 4 ->
+                        d = Direction.SOUTH;
                 }
-                assert (d != null);
                 if (tryMove(d)) {
-                    System.out.println("Voce consegue escapar!");
                     battle = null;
                 }
             }
         }
-
         for (Dinosaur dino : dinos) {
             boolean isFoe = battle != null && battle.getFoe() == dino;
             if (!isFoe) {
                 dino.think(this, player, tilemap);
             }
         }
+    }
+
+    public void playerInput(char key) {
+        if (battle == null) {
+            switch (key) {
+                case 'w':
+                    tryMove(Direction.NORTH);
+                    break;
+                case 'a':
+                    tryMove(Direction.WEST);
+                    break;
+                case 's':
+                    tryMove(Direction.SOUTH);
+                    break;
+                case 'd':
+                    tryMove(Direction.EAST);
+                    break;
+                case 'c':
+                    player.tryHeal();
+                    break;
+                case 'D':
+                    onDebugMode = !onDebugMode;
+                    break;
+                case 'q':
+                    running = false;
+                    return;
+            }
+        } else {
+            turnBattle();
+        }
+        update();
     }
 }

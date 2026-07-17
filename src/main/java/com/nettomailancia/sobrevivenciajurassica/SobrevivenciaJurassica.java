@@ -1,31 +1,50 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
 package com.nettomailancia.sobrevivenciajurassica;
 
-import java.util.Scanner;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
-/**
- * @author ebm
- */
 public class SobrevivenciaJurassica {
 
     public static void main(String[] args) {
-        while (true) {
-            System.out.println("S O B R E V I V E N C I A");
-            System.out.println("    J U R A S S I C A");
-            System.out.println("1. Jogar");
-            System.out.println("2. Sair");
-            Scanner terminalInput = new Scanner(System.in);
-            String s = terminalInput.nextLine();
-            if ("1".equals(s)) {
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Sobrevivência Jurássica");
+
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setPreferredSize(new Dimension(600, 400));
+            frame.setLayout(new BorderLayout());
+
+            JLabel title = new JLabel("SOBREVIVÊNCIA JURÁSSICA");
+            title.setHorizontalAlignment(SwingConstants.CENTER);
+            title.setFont(new Font("SansSerif", Font.BOLD, 28));
+
+            JButton playButton = new JButton("Jogar");
+            JButton exitButton = new JButton("Sair");
+
+            JPanel buttons = new JPanel(new GridLayout(2, 1, 10, 10));
+            buttons.add(playButton);
+            buttons.add(exitButton);
+
+            frame.add(title, BorderLayout.NORTH);
+            frame.add(buttons, BorderLayout.CENTER);
+
+            playButton.addActionListener(e -> {
                 Game game = new Game();
-                while (!game.quit()) {
-                    game.run();
-                }
-            } else if ("2".equals(s)) {
-                break;
-            }
-        }
+                new GameWindow(game);
+            });
+
+            exitButton.addActionListener(e -> System.exit(0));
+
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        });
     }
 }
