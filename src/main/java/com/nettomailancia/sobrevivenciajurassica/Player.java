@@ -20,7 +20,7 @@ public class Player extends Entity {
     Player(int difficulty) {
         setHp(MAX_HP);
         perception = difficulty;
-        medkits = 0;
+        medkits = 1;
         darts = 0;
         shockBat = false;
     }
@@ -54,8 +54,8 @@ public class Player extends Entity {
         return shockBat;
     }
     
-    public boolean hasMedKit() {
-        return medkits > 0;
+    public int getMedkits(){
+        return medkits;
     }
 
     public int getPerception() {

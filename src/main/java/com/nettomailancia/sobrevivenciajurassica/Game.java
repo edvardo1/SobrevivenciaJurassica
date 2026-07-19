@@ -257,7 +257,7 @@ public class Game {
                     break;
                 case 'c':
                     
-                    if( player.hasMedKit() ) {
+                    if( player.getMedkits() > 0 ) {
                         addMessage("CURA");
                         player.tryHeal();
                     }else{
