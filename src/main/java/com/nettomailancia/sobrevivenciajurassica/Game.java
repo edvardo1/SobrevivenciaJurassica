@@ -188,7 +188,7 @@ public class Game {
     }
 
     public void update() {
-        if (player.getHp() < 0) {
+        if (player.getHp() <= 0) {
             addMessage("Você está morto!");
             running = false;
             return;
@@ -256,8 +256,13 @@ public class Game {
                     addMessage("LESTE");
                     break;
                 case 'c':
-                    player.tryHeal();
-                    addMessage("CURA");
+                    
+                    if( player.hasMedKit() ) {
+                        addMessage("CURA");
+                        player.tryHeal();
+                    }else{
+                        addMessage("SEM MEDKITS");
+                    }
                     break;
                 case 'D':
                     addMessage("toggle debug");

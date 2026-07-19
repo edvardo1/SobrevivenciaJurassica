@@ -53,11 +53,15 @@ public class Player extends Entity {
     public boolean hasShock() {
         return shockBat;
     }
+    
+    public boolean hasMedKit() {
+        return medkits > 0;
+    }
 
     public int getPerception() {
         return perception;
     }
-
+    
     public void setPerception(int perception) {
         this.perception = perception;
     }
@@ -71,9 +75,7 @@ public class Player extends Entity {
     }
 
     public void tryHeal() {
-        if (medkits > 0) {
             setHp(Math.max(getHp() + 1, MAX_HP));
             medkits -= 1;
-        }
     }
 }
