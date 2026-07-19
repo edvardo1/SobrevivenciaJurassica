@@ -41,7 +41,7 @@ public class Game {
 
     public void addMessage(String message) {
         messages.add(message);
-        while (messages.size() > 12) {
+        while (messages.size() > 6) {
             messages.remove(0);
         }
     }

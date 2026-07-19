@@ -15,8 +15,11 @@ public class GameWindow extends JFrame {
     private final Game game;
     private final JPanel panel;
     private BufferedImage trexImage;
+    private BufferedImage grassImage;
+    private BufferedImage treesImage;
+    private BufferedImage alanGrantImage;
 
-    private static final int TILE_SIZE = 32;
+    private static final int TILE_SIZE = 45;
 
     public GameWindow(Game game) {
         this.game = game;
@@ -25,10 +28,10 @@ public class GameWindow extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         try {
-            trexImage = ImageIO.read(
-                    getClass().getResource("/trex.png")
-            );
-
+            trexImage = ImageIO.read(getClass().getResource("/trex.png"));
+            grassImage = ImageIO.read(getClass().getResource("/grass.png"));
+            treesImage = ImageIO.read(getClass().getResource("/trees.png"));
+            alanGrantImage = ImageIO.read(getClass().getResource("/alangrant.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -89,7 +92,7 @@ public class GameWindow extends JFrame {
 
         add(panel);
 
-        setSize(800, 600);
+        setSize(1280, 800);
         setLocationRelativeTo(null);
         setVisible(true);
 
@@ -108,13 +111,38 @@ public class GameWindow extends JFrame {
             for (int x = 0; x < mapWidth; x++) {
                 char c = map[y * mapWidth + x];
 
+                if (c != '#' && c != ' ') {
+                    g.drawImage(
+                            grassImage,
+                            x * TILE_SIZE,
+                            y * TILE_SIZE,
+                            TILE_SIZE,
+                            TILE_SIZE,
+                            null
+                    );
+                }
+
                 switch (c) {
                     case '#':
-                        g.setColor(Color.GRAY);
-                        break;
+                        g.drawImage(
+                                treesImage,
+                                x * TILE_SIZE,
+                                y * TILE_SIZE,
+                                TILE_SIZE,
+                                TILE_SIZE,
+                                null
+                        );
+                        continue;
                     case '@':
-                        g.setColor(Color.GREEN);
-                        break;
+                        g.drawImage(
+                                alanGrantImage,
+                                x * TILE_SIZE,
+                                y * TILE_SIZE,
+                                TILE_SIZE,
+                                TILE_SIZE,
+                                null
+                        );
+                        continue;
                     case 'R':
                     case 'T':
                     case 'C':
@@ -129,15 +157,9 @@ public class GameWindow extends JFrame {
                         );
                         continue;
                     default:
-                        g.setColor(Color.WHITE);
+                        
                         break;
                 }
-
-                g.drawString(
-                        Character.toString(c),
-                        x * TILE_SIZE,
-                        (y + 1) * TILE_SIZE
-                );
             }
         }
         g.setColor(Color.YELLOW);
@@ -148,7 +170,7 @@ public class GameWindow extends JFrame {
         infoY += 25;
         for (String message : game.getMessages()) {
             g.drawString(message, 10, infoY);
-            infoY += 18;
+            infoY += 32;
         }
     }
 }
