@@ -15,7 +15,7 @@ public class Shock extends Supply {
 
     @Override
     public boolean onPlayerMovement(Game game, Player p, Position tilePosition, FreeTile myTile) {
-        System.out.println("Voce adquiriu um bastao de choque!");
+        game.addMessage("Voce adquiriu um bastao de choque!");
         p.acquireShock();
         myTile.setSupply(null);
         return true;

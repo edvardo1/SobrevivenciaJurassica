@@ -4,6 +4,8 @@
  */
 package com.nettomailancia.sobrevivenciajurassica;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author joaop
@@ -15,13 +17,21 @@ public class Battle {
     private Dinosaur foe;
     private boolean isAmbush;
     private boolean tryingToRunAway;
+    
+    private GameWindow battleWindow;
+    public ArrayList<String> battleLog = new ArrayList<>();
+    private String playernum1Action;
+    private String dinoAction;
+    
 
     public Battle(Game g, Player p, Dinosaur f, boolean ambush) {
         game = g;
         player = p;
         foe = f;
         isAmbush = ambush;
-        game.addMessage("Inicia-se uma batalha!");
+        addBattleMessage("Inicia-se uma batalha!");
+        
+        // instancia e abre uma gamewindow de batalha
     }
 
     public boolean isTryingToRunAway() {
@@ -32,8 +42,16 @@ public class Battle {
         return foe;
     }
 
+    public String getDinoAction() {
+        return dinoAction;
+    }
+    
     public void setFoe(Dinosaur foe) {
         this.foe = foe;
+    }
+    
+    public String getPlayerAction() {
+        return playernum1Action;
     }
 
     public boolean isOver() {
@@ -44,25 +62,28 @@ public class Battle {
         tryingToRunAway = false;
         switch (key) {
             case 'r':
-                game.addMessage("Você tentou fugir!");
+                addBattleMessage("Você tentou fugir!");
                 tryingToRunAway = true;
                 return;
             case 'p':
                 if (player.hasShock()) {
                     foe.damageShockBaton();
-                    game.addMessage("Você atacou com o bastão de choque!");
+                    addBattleMessage("Você atacou com o bastão de choque!");
+                    playernum1Action = "shock";
                 } else {
                     foe.damageHand();
-                    game.addMessage("Você atacou com os punhos!");
+                    addBattleMessage("Você atacou com os punhos!");
+                    playernum1Action = "punch";
                 }
                 break;
             case 'd':
                 if (player.hasDarts()) {
                     foe.damageDart();
                     player.loseDarts(1);
-                    game.addMessage("Você lançou um dardo!");
+                    addBattleMessage("Você lançou um dardo!");
+                    playernum1Action = "dart";
                 } else {
-                    game.addMessage("Você não tem dardos!");
+                    addBattleMessage("Você não tem dardos!");
                     return;
                 }
                 break;
@@ -71,7 +92,7 @@ public class Battle {
         }
         foeTurn();
         if (foe.getHp() <= 0) {
-            game.addMessage("O " + foe.getName() + " morreu!");
+            addBattleMessage("O " + foe.getName() + " morreu!");
         }
     }
 
@@ -82,7 +103,8 @@ public class Battle {
 
         if (Rng.getInstance().dice(3) <= player.getPerception()) {
             foe.attackPlayer(player);
-            game.addMessage("O " + getFoe().getName() + " te ataca!");
+            addBattleMessage("O " + getFoe().getName() + " te ataca!");
+            dinoAction = "bite";
         }
     }
 
@@ -92,4 +114,12 @@ public class Battle {
             isAmbush = false;
         }
     }
+    
+    public void addBattleMessage(String message) {
+        battleLog.add(message);
+        while (battleLog.size() > 4) {
+            battleLog.remove(0);
+        }
+    }
+    
 }
