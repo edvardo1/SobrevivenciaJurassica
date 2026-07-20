@@ -37,7 +37,9 @@ public class SobrevivenciaJurassica {
 
             playButton.addActionListener(e -> {
                 Game game = new Game();
-                new GameWindow(game);
+                GameWindow window = new GameWindow(game);
+                game.setGameWindow(window);
+                game.startDinoThreads();
             });
 
             exitButton.addActionListener(e -> System.exit(0));

@@ -17,12 +17,11 @@ public class Battle {
     private Dinosaur foe;
     private boolean isAmbush;
     private boolean tryingToRunAway;
-    
+
     private GameWindow battleWindow;
     public ArrayList<String> battleLog = new ArrayList<>();
     private String playernum1Action;
     private String dinoAction;
-    
 
     public Battle(Game g, Player p, Dinosaur f, boolean ambush) {
         game = g;
@@ -30,7 +29,7 @@ public class Battle {
         foe = f;
         isAmbush = ambush;
         addBattleMessage("Inicia-se uma batalha!");
-        
+
         // instancia e abre uma gamewindow de batalha
     }
 
@@ -45,11 +44,11 @@ public class Battle {
     public String getDinoAction() {
         return dinoAction;
     }
-    
+
     public void setFoe(Dinosaur foe) {
         this.foe = foe;
     }
-    
+
     public String getPlayerAction() {
         return playernum1Action;
     }
@@ -114,12 +113,12 @@ public class Battle {
             isAmbush = false;
         }
     }
-    
+
     public void addBattleMessage(String message) {
         battleLog.add(message);
         while (battleLog.size() > 4) {
             battleLog.remove(0);
         }
     }
-    
+
 }

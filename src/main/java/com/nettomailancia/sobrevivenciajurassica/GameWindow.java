@@ -19,17 +19,17 @@ import javax.swing.JButton;
 import javax.swing.Timer;
 
 // adicionar battleWindow assim que a lógica da classe batalha estiver arrumada
-
 public class GameWindow extends JFrame {
+
     private final Game game;
     private final JPanel panel;
     private final Map<Character, Image> sprites = new HashMap<>();
-    
+
     private JButton attackButton;
     private JButton itemButton;
     private JButton runButton;
     private JPanel battleButtonsPanel;
-    
+
     private final Map<String, Image> actionSprites = new HashMap<>();
     private String currentAction;
 
@@ -37,11 +37,10 @@ public class GameWindow extends JFrame {
 
     public GameWindow(Game game) {
         this.game = game;
-        
 
         setTitle("Sobrevivência Jurássica");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+
         sprites.put('#', loadImage("/sprites/wall.png"));
         sprites.put('@', loadImage("/sprites/player.png"));
         sprites.put('T', loadImage("/sprites/troodon.png"));
@@ -54,7 +53,7 @@ public class GameWindow extends JFrame {
         actionSprites.put("shock", loadImage("/sprites/shock.png"));
         actionSprites.put("dart", loadImage("/sprites/dart.png"));
         actionSprites.put("bite", loadImage("/sprites/bite.png"));
-        
+
         panel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -66,7 +65,7 @@ public class GameWindow extends JFrame {
                 }
             }
         };
-        
+
         battleButtonsPanel = new JPanel();
         attackButton = new JButton("Atacar");
         itemButton = new JButton("Arma de Dardos");
@@ -82,7 +81,7 @@ public class GameWindow extends JFrame {
         battleButtonsPanel.setVisible(false); // só aparece durante a batalha
 
         add(battleButtonsPanel, java.awt.BorderLayout.SOUTH);
-        
+
         panel.setBackground(Color.BLACK);
         panel.setFocusable(true);
 
@@ -121,6 +120,7 @@ public class GameWindow extends JFrame {
                 }
 
                 if (game.quit()) {
+                    game.stopDinoThreads();
                     dispose();
                     return;
                 }
@@ -145,25 +145,24 @@ public class GameWindow extends JFrame {
         int mapHeight = game.getTilemap().getHeight();
 
         //g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 16));
-         Graphics2D grafic = (Graphics2D) g;
-         
+        Graphics2D grafic = (Graphics2D) g;
+
         for (int y = 0; y < mapHeight; y++) {
             for (int x = 0; x < mapWidth; x++) {
                 char c = map[y * mapWidth + x];
-                
+
                 Image sprite = sprites.getOrDefault(c, sprites.get(' '));
-                
+
                 grafic.drawImage(
-                    sprite,
-                    x * TILE_SIZE,
-                    y * TILE_SIZE,
-                    TILE_SIZE,
-                    TILE_SIZE,
-                    panel
+                        sprite,
+                        x * TILE_SIZE,
+                        y * TILE_SIZE,
+                        TILE_SIZE,
+                        TILE_SIZE,
+                        panel
                 );
 
-                
-            /*  switch (c) {
+                /*  switch (c) {
                     case '#':
                         g.setColor(Color.GRAY);
                         break;
@@ -187,14 +186,13 @@ public class GameWindow extends JFrame {
                         (y + 1) * TILE_SIZE
                 );*/
             }
-            
+
         }
         g.setColor(Color.YELLOW);
         int infoY = mapHeight * TILE_SIZE + 20;
 
         g.drawString("HP: " + game.getPlayer().getHp(), 10, infoY);
-        
-        
+
         infoY += 25;
         for (String message : game.getMessages()) {
             g.drawString(message, 10, infoY);
@@ -202,16 +200,14 @@ public class GameWindow extends JFrame {
         }
     }
 
-    public void drawBattle(Graphics g){
+    public void drawBattle(Graphics g) {
         Graphics2D d2 = (Graphics2D) g;
         Battle battle = game.getBattle();
         Dinosaur foe = battle.getFoe();
         Player player = game.getPlayer();
-        
-        
+
         d2.setColor(new Color(20, 60, 20));
         d2.fillRect(0, 0, getWidth(), getHeight());
-
 
         Image foeSprite = sprites.get(foe.getChar());
         d2.drawImage(foeSprite, 500, 60, 96, 96, panel);
@@ -222,7 +218,7 @@ public class GameWindow extends JFrame {
         d2.drawImage(playerSprite, 100, 260, 96, 96, panel);
         d2.drawString("Você", 100, 250);
         drawHpBar(d2, 100, 360, player.getHp(), player.MAX_HP);
-        
+
         if (currentAction != null) {
             Image actionImg = actionSprites.get(currentAction);
             if (actionImg != null) {
@@ -231,7 +227,7 @@ public class GameWindow extends JFrame {
                 d2.drawImage(actionImg, midX, midY, 48, 48, panel);
             }
         }
-        
+
         int msgY = 420;
         for (String message : battle.battleLog) {
             d2.drawString(message, 20, msgY);
@@ -249,21 +245,22 @@ public class GameWindow extends JFrame {
         g2.setColor(Color.WHITE);
         g2.drawRect(x, y, barWidth, 10);
     }
-    
+
     private void handleBattleAction(char key) {
         game.playerInput(key);
-        if ( game.quit() ){
+        if (game.quit()) {
+            game.stopDinoThreads();
             dispose();
             return;
-        }else{
+        } else {
             if (game.getBattle() != null) {
-                playAttackSequence(game.getBattle().getPlayerAction(), game.getBattle().getDinoAction());    
+                playAttackSequence(game.getBattle().getPlayerAction(), game.getBattle().getDinoAction());
             }
             battleButtonsPanel.setVisible(game.getBattle() != null);
             repaint();
         }
     }
- 
+
     private Image loadImage(String path) {
         try (InputStream is = getClass().getResourceAsStream(path)) {
             if (is == null) {
@@ -275,25 +272,25 @@ public class GameWindow extends JFrame {
         }
     }
 
-private void playAttackSequence(String playerAction, String foeAction) {
-    currentAction = playerAction;
-    repaint();
-
-    Timer timer1 = new Timer(1000, e -> {
-        ((Timer) e.getSource()).stop();
-        currentAction = foeAction;
+    private void playAttackSequence(String playerAction, String foeAction) {
+        currentAction = playerAction;
         repaint();
 
-        Timer timer2 = new Timer(1000, e2 -> {
-            ((Timer) e2.getSource()).stop();
-            currentAction = null;
+        Timer timer1 = new Timer(1000, e -> {
+            ((Timer) e.getSource()).stop();
+            currentAction = foeAction;
             repaint();
+
+            Timer timer2 = new Timer(1000, e2 -> {
+                ((Timer) e2.getSource()).stop();
+                currentAction = null;
+                repaint();
+            });
+            timer2.setRepeats(false);
+            timer2.start();
         });
-        timer2.setRepeats(false);
-        timer2.start();
-    });
-    timer1.setRepeats(false);
-    timer1.start();
-}
-    
+        timer1.setRepeats(false);
+        timer1.start();
+    }
+
 }

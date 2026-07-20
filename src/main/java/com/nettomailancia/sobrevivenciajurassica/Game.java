@@ -20,6 +20,21 @@ public class Game {
     private boolean onDebugMode = false;
     private ArrayList<Dinosaur> dinos;
 
+    private final Object worldLock = new Object();
+    private GameWindow gameWindow;
+
+    public Object getWorldLock() {
+        return worldLock;
+    }
+
+    public GameWindow getGameWindow() {
+        return gameWindow;
+    }
+
+    public void setGameWindow(GameWindow gameWindow) {
+        this.gameWindow = gameWindow;
+    }
+
     public Game() {
         boolean rerun = false;
         dinos = new ArrayList<Dinosaur>();
@@ -33,6 +48,21 @@ public class Game {
             }
         } while (rerun);
         running = true;
+    }
+
+    public void startDinoThreads() {
+        for (Dinosaur dino : dinos) {
+            dino.startThread(this, player, tilemap);
+        }
+    }
+
+    public void stopDinoThreads() {
+        synchronized (worldLock) {
+            worldLock.notifyAll(); // acorda qualquer thread presa em wait()
+        }
+        for (Dinosaur dino : dinos) {
+            dino.stopThread();
+        }
     }
 
     public boolean quit() {
@@ -188,50 +218,48 @@ public class Game {
     }
 
     public void update() {
-        if (player.getHp() <= 0) {
-            addMessage("Você está morto!");
-            running = false;
-            return;
-        }
-        if (dinos.size() <= 0) {
-            addMessage("Você conseguiu matar todos os dinossauros!");
-            running = false;
-            return;
-        }
-
-        if (battle != null && battle.isOver()) {
-            try {
-                FreeTile ft = (FreeTile) tilemap.getTile(battle.getFoe().getPosition());
-                dinos.remove((Dinosaur) ft.getEntity());
-                ft.setEntity(null);
-            } catch (Exception e) {
+        synchronized (worldLock) {
+            if (player.getHp() <= 0) {
+                addMessage("Você está morto!");
+                running = false;
+                worldLock.notifyAll(); // acorda as threads pra elas poderem sair do loop
+                return;
             }
-            battle = null;
-        }
-
-        if (battle != null && battle.isTryingToRunAway()) {
-            Direction d = null;
-
-            switch (Rng.getInstance().dice(4)) {
-                case 1 ->
-                    d = Direction.NORTH;
-                case 2 ->
-                    d = Direction.WEST;
-                case 3 ->
-                    d = Direction.EAST;
-                case 4 ->
-                    d = Direction.SOUTH;
+            if (dinos.size() <= 0) {
+                addMessage("Você conseguiu matar todos os dinossauros!");
+                running = false;
+                worldLock.notifyAll();
+                return;
             }
 
-            if (tryMove(d)) {
-                addMessage("Você conseguiu escapar!");
+            if (battle != null && battle.isOver()) {
+                try {
+                    FreeTile ft = (FreeTile) tilemap.getTile(battle.getFoe().getPosition());
+                    dinos.remove((Dinosaur) ft.getEntity());
+                    ft.setEntity(null);
+                } catch (Exception e) {
+                }
                 battle = null;
+                worldLock.notifyAll(); // <- essencial: acorda os dinos que estavam esperando
             }
-        }
-        for (Dinosaur dino : dinos) {
-            boolean isFoe = battle != null && battle.getFoe() == dino;
-            if (!isFoe) {
-                dino.think(this, player, tilemap);
+
+            if (battle != null && battle.isTryingToRunAway()) {
+                Direction d = null;
+                switch (Rng.getInstance().dice(4)) {
+                    case 1 ->
+                        d = Direction.NORTH;
+                    case 2 ->
+                        d = Direction.WEST;
+                    case 3 ->
+                        d = Direction.EAST;
+                    case 4 ->
+                        d = Direction.SOUTH;
+                }
+                if (tryMove(d)) {
+                    addMessage("Você conseguiu escapar!");
+                    battle = null;
+                    worldLock.notifyAll(); // <- idem, fuga também libera os dinos
+                }
             }
         }
     }
@@ -256,11 +284,11 @@ public class Game {
                     addMessage("LESTE");
                     break;
                 case 'c':
-                    
-                    if( player.getMedkits() > 0 ) {
+
+                    if (player.getMedkits() > 0) {
                         addMessage("CURA");
                         player.tryHeal();
-                    }else{
+                    } else {
                         addMessage("SEM MEDKITS");
                     }
                     break;

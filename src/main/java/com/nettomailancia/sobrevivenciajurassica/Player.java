@@ -4,7 +4,6 @@
  */
 package com.nettomailancia.sobrevivenciajurassica;
 
-
 /**
  *
  * @author joaop
@@ -53,15 +52,15 @@ public class Player extends Entity {
     public boolean hasShock() {
         return shockBat;
     }
-    
-    public int getMedkits(){
+
+    public int getMedkits() {
         return medkits;
     }
 
     public int getPerception() {
         return perception;
     }
-    
+
     public void setPerception(int perception) {
         this.perception = perception;
     }
@@ -75,7 +74,7 @@ public class Player extends Entity {
     }
 
     public void tryHeal() {
-            setHp(Math.max(getHp() + 1, MAX_HP));
-            medkits -= 1;
+        setHp(Math.max(getHp() + 1, MAX_HP));
+        medkits -= 1;
     }
 }

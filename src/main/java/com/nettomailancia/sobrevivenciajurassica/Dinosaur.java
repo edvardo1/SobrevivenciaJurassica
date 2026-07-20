@@ -4,13 +4,80 @@
  */
 package com.nettomailancia.sobrevivenciajurassica;
 
+import javax.swing.SwingUtilities;
+
 /**
  *
  * @author joaop
  */
-abstract public class Dinosaur extends Entity {
+abstract public class Dinosaur extends Entity implements Runnable {
 
     abstract String getName();
+
+    private volatile boolean alive = true;
+    private Thread thread;
+    private Game game;
+    private Player player;
+    private TileMap tilemap;
+
+    public void startThread(Game game, Player player, TileMap tilemap) {
+        this.game = game;
+        this.player = player;
+        this.tilemap = tilemap;
+
+        thread = new Thread(this);
+        thread.setDaemon(true);
+        thread.start();
+    }
+
+    public void stopThread() {
+        alive = false;
+        if (thread != null) {
+            thread.interrupt();
+        }
+    }
+
+    @Override
+    public void run() {
+        while (alive && !game.quit()) {
+            synchronized (game.getWorldLock()) {
+                // Enquanto existir QUALQUER batalha em andamento, este dinossauro
+                // (seja ele o adversário ou não) fica parado, esperando ser
+                // acordado por notifyAll() quando a batalha terminar.
+                while (game.getBattle() != null && alive && !game.quit()) {
+                    try {
+                        game.getWorldLock().wait();
+                    } catch (InterruptedException e) {
+                        alive = false;
+                        break;
+                    }
+                }
+
+                if (!alive || game.quit()) {
+                    break;
+                }
+
+                if (getHp() <= 0) {
+                    alive = false;
+                    continue;
+                }
+
+                think(game, player, tilemap);
+            }
+
+            SwingUtilities.invokeLater(() -> {
+                if (game.getGameWindow() != null) {
+                    game.getGameWindow().repaint();
+                }
+            });
+
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                break;
+            }
+        }
+    }
 
     public boolean tryMoveDir(Game game, Player p, TileMap tm, Direction d) {
         Position nextPosition = new Position(getPosition(), d);
@@ -32,7 +99,7 @@ abstract public class Dinosaur extends Entity {
                 }
                 if (ft != null && currentFt != null) {
                     ft.setEntity(this);
-                    assert(currentFt.getEntity() == this);
+                    assert (currentFt.getEntity() == this);
                     currentFt.setEntity(null);
                     setPosition(nextPosition);
                     return true;

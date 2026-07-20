@@ -12,7 +12,7 @@ abstract public class Entity {
 
     private Position position;
     private int hp;
-    
+
     public Entity() {
     }
 
