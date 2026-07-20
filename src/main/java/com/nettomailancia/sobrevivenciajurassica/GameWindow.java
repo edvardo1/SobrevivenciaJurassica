@@ -188,7 +188,11 @@ public class GameWindow extends JFrame {
                 if (t.getChar() == '#') {
                     image = sprites.get('#');
                 } else {
-                    image = sprites.get(' ');
+                    if (t.getSupply() != null) {
+                        image = sprites.get('X');
+                    } else {
+                        image = sprites.get(' ');
+                    }
                 }
                 g.drawImage(
                         image,
