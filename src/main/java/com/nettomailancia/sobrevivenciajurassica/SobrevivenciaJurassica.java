@@ -7,6 +7,7 @@ import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -36,10 +37,26 @@ public class SobrevivenciaJurassica {
             frame.add(buttons, BorderLayout.CENTER);
 
             playButton.addActionListener(e -> {
-                Game game = new Game();
+                Integer difficulty = (Integer) JOptionPane.showInputDialog(
+                        frame,
+                        "Selecione a dificuldade:",
+                        "Nova Partida",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        new Integer[]{1, 2, 3},
+                        1
+                );
+
+                if (difficulty == null) {
+                    return;
+                }
+
+                Game game = new Game(difficulty);
                 GameWindow window = new GameWindow(game);
                 game.setGameWindow(window);
                 game.startDinoThreads();
+
+                frame.dispose();
             });
 
             exitButton.addActionListener(e -> System.exit(0));

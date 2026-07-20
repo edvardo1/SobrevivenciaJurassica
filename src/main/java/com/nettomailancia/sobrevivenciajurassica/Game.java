@@ -37,13 +37,13 @@ public class Game {
         this.gameWindow = gameWindow;
     }
 
-    public Game() {
+    public Game(int difficulty) {
         boolean rerun = false;
         dinos = new ArrayList<Dinosaur>();
         do {
             rerun = false;
             try {
-                MapGenerator.caveGenerate(this, 0);
+                MapGenerator.caveGenerate(this, difficulty);
             } catch (Exception ex) {
                 System.out.println("failed!, doing it again!");
                 rerun = true;
