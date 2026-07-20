@@ -21,9 +21,10 @@ public class Game {
     private Battle battle;
     private boolean onDebugMode = false;
     private ArrayList<Dinosaur> dinos;
-
     private final Object worldLock = new Object();
     private GameWindow gameWindow;
+    private int difficulty;
+    private long seed;
 
     public Object getWorldLock() {
         return worldLock;
@@ -37,7 +38,22 @@ public class Game {
         this.gameWindow = gameWindow;
     }
 
+    public int getDifficulty() {
+        return difficulty;
+    }
+
+    public long getSeed() {
+        return seed;
+    }
+
     public Game(int difficulty) {
+        this(difficulty, System.currentTimeMillis());
+    }
+
+    public Game(int difficulty, long seed) {
+        this.difficulty = difficulty;
+        this.seed = seed;
+        Rng.getInstance().setSeed(seed);
         boolean rerun = false;
         dinos = new ArrayList<Dinosaur>();
         do {
@@ -279,16 +295,54 @@ public class Game {
 
     public void update() {
         synchronized (worldLock) {
+
             if (player.getHp() <= 0) {
-                addMessage("Você está morto!");
                 running = false;
-                worldLock.notifyAll(); // acorda as threads pra elas poderem sair do loop
+                stopDinoThreads();
+
+                int option = javax.swing.JOptionPane.showOptionDialog(
+                        gameWindow,
+                        "Você perdeu!",
+                        "Fim de jogo",
+                        javax.swing.JOptionPane.DEFAULT_OPTION,
+                        javax.swing.JOptionPane.INFORMATION_MESSAGE,
+                        null,
+                        new String[]{"Reiniciar Jogo", "Novo Jogo"},
+                        "Reiniciar Jogo");
+
+                gameWindow.dispose();
+
+                if (option == 0) {
+                    SobrevivenciaJurassica.restartGame(this);
+                } else {
+                    SobrevivenciaJurassica.showMainMenu();
+                }
+
                 return;
             }
-            if (dinos.size() <= 0) {
-                addMessage("Você conseguiu matar todos os dinossauros!");
+
+            if (dinos.isEmpty()) {
                 running = false;
-                worldLock.notifyAll();
+                stopDinoThreads();
+
+                int option = javax.swing.JOptionPane.showOptionDialog(
+                        gameWindow,
+                        "Você venceu!",
+                        "Fim de jogo",
+                        javax.swing.JOptionPane.DEFAULT_OPTION,
+                        javax.swing.JOptionPane.INFORMATION_MESSAGE,
+                        null,
+                        new String[]{"Reiniciar Jogo", "Novo Jogo"},
+                        "Reiniciar Jogo");
+
+                gameWindow.dispose();
+
+                if (option == 0) {
+                    SobrevivenciaJurassica.restartGame(this);
+                } else {
+                    SobrevivenciaJurassica.showMainMenu();
+                }
+
                 return;
             }
 
@@ -300,7 +354,7 @@ public class Game {
                 } catch (Exception e) {
                 }
                 battle = null;
-                worldLock.notifyAll(); // <- essencial: acorda os dinos que estavam esperando
+                worldLock.notifyAll();
             }
 
             if (battle != null && battle.isTryingToRunAway()) {
@@ -318,7 +372,7 @@ public class Game {
                 if (tryMove(d)) {
                     addMessage("Você conseguiu escapar!");
                     battle = null;
-                    worldLock.notifyAll(); // <- idem, fuga também libera os dinos
+                    worldLock.notifyAll();
                 }
             }
         }

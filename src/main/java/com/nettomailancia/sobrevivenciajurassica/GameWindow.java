@@ -203,8 +203,11 @@ public class GameWindow extends JFrame {
         int infoY = mapHeight * TILE_SIZE + 20;
 
         g.drawString("HP: " + game.getPlayer().getHp(), 10, infoY);
+        infoY += 18;
+        g.drawString("HP: " + game.getPlayer().getPerception(), 10, infoY);
+        infoY += 18;
 
-        infoY += 25;
+        infoY += 10;
         for (String message : game.getMessages()) {
             g.drawString(message, 10, infoY);
             infoY += 18;

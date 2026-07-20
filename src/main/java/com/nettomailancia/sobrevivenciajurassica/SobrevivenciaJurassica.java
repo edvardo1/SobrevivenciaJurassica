@@ -15,55 +15,70 @@ import javax.swing.SwingUtilities;
 public class SobrevivenciaJurassica {
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Sobrevivência Jurássica");
+        SwingUtilities.invokeLater(SobrevivenciaJurassica::showMainMenu);
+    }
 
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setPreferredSize(new Dimension(600, 400));
-            frame.setLayout(new BorderLayout());
+    public static void showMainMenu() {
+        JFrame frame = new JFrame("Sobrevivência Jurássica");
 
-            JLabel title = new JLabel("SOBREVIVÊNCIA JURÁSSICA");
-            title.setHorizontalAlignment(SwingConstants.CENTER);
-            title.setFont(new Font("SansSerif", Font.BOLD, 28));
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setPreferredSize(new Dimension(600, 400));
+        frame.setLayout(new BorderLayout());
 
-            JButton playButton = new JButton("Jogar");
-            JButton exitButton = new JButton("Sair");
+        JLabel title = new JLabel("SOBREVIVÊNCIA JURÁSSICA");
+        title.setHorizontalAlignment(SwingConstants.CENTER);
+        title.setFont(new Font("SansSerif", Font.BOLD, 28));
 
-            JPanel buttons = new JPanel(new GridLayout(2, 1, 10, 10));
-            buttons.add(playButton);
-            buttons.add(exitButton);
+        JButton playButton = new JButton("Jogar");
+        JButton exitButton = new JButton("Sair");
 
-            frame.add(title, BorderLayout.NORTH);
-            frame.add(buttons, BorderLayout.CENTER);
+        JPanel buttons = new JPanel(new GridLayout(2, 1, 10, 10));
+        buttons.add(playButton);
+        buttons.add(exitButton);
 
-            playButton.addActionListener(e -> {
-                Integer difficulty = (Integer) JOptionPane.showInputDialog(
-                        frame,
-                        "Selecione a dificuldade:",
-                        "Nova Partida",
-                        JOptionPane.QUESTION_MESSAGE,
-                        null,
-                        new Integer[]{1, 2, 3},
-                        1
-                );
+        frame.add(title, BorderLayout.NORTH);
+        frame.add(buttons, BorderLayout.CENTER);
 
-                if (difficulty == null) {
-                    return;
-                }
+        playButton.addActionListener(e -> {
 
-                Game game = new Game(difficulty);
-                GameWindow window = new GameWindow(game);
-                game.setGameWindow(window);
-                game.startDinoThreads();
+            Integer difficulty = (Integer) JOptionPane.showInputDialog(
+                    frame,
+                    "Selecione a dificuldade:",
+                    "Nova Partida",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    new Integer[]{1, 2, 3},
+                    1
+            );
 
-                frame.dispose();
-            });
+            if (difficulty == null) {
+                return;
+            }
 
-            exitButton.addActionListener(e -> System.exit(0));
+            Game game = new Game(difficulty);
+            GameWindow window = new GameWindow(game);
 
-            frame.pack();
-            frame.setLocationRelativeTo(null);
-            frame.setVisible(true);
+            game.setGameWindow(window);
+            game.startDinoThreads();
+
+            frame.dispose();
         });
+
+        exitButton.addActionListener(e -> System.exit(0));
+
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
+
+    public static void restartGame(Game oldGame) {
+        Game game = new Game(
+                oldGame.getDifficulty(),
+                oldGame.getSeed()
+        );
+
+        GameWindow window = new GameWindow(game);
+        game.setGameWindow(window);
+        game.startDinoThreads();
     }
 }
