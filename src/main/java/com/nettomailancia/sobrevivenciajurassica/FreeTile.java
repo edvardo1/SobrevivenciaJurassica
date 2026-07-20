@@ -30,6 +30,7 @@ public class FreeTile extends Tile {
         this(null, null);
     }
 
+    @Override
     public Entity getEntity() {
         return entity;
     }
@@ -38,6 +39,7 @@ public class FreeTile extends Tile {
         this.entity = entity;
     }
 
+    @Override
     public Supply getSupply() {
         return supply;
     }

@@ -5,6 +5,8 @@
 package com.nettomailancia.sobrevivenciajurassica;
 
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  *
@@ -183,6 +185,64 @@ public class Game {
         }
 
         return c;
+    }
+
+    private void castRay2(Position orig, Set<Position> positions, double angle) {
+        double x = orig.getX() + 0.5;
+        double y = orig.getY() + 0.5;
+        double dx = Math.cos(angle) * 0.1;
+        double dy = Math.sin(angle) * 0.1;
+        boolean running = true;
+        while (Math.floor(x) == orig.getX() && Math.floor(y) == orig.getY()) {
+            x += dx;
+            y += dy;
+        }
+
+        while (running) {
+            int fx = (int) Math.floor(x);
+            int fy = (int) Math.floor(y);
+            if (!(0 <= fx && fx < tilemap.getWidth())) {
+                break;
+            }
+            if (!(0 <= fy && fy < tilemap.getHeight())) {
+                break;
+            }
+            Position fpos = new Position(fx, fy);
+            positions.add(fpos);
+            try {
+                if (tilemap.getTile(fpos).isOccupied()) {
+                    running = false;
+                }
+            } catch (Exception e) {
+                running = false;
+            }
+            x += dx;
+            y += dy;
+        }
+    }
+
+    public Set<Position> getVisibleMap2() {
+        Set<Position> positions = new HashSet<>();
+
+        try {
+            if (onDebugMode) {
+                for (int y = 0; y < tilemap.getHeight(); y++) {
+                    for (int x = 0; x < tilemap.getWidth(); x++) {
+                        positions.add(new Position(x, y));
+                    }
+                }
+            } else {
+                Position ppos = player.getPosition();
+
+                for (double angle = 0.0; angle < 2 * Math.PI; angle += 0.01) {
+                    castRay2(ppos, positions, angle);
+                }
+                positions.add(ppos);
+            }
+        } catch (Exception e) {
+        }
+
+        return positions;
     }
 
     public Player getPlayer() {

@@ -10,8 +10,12 @@ package com.nettomailancia.sobrevivenciajurassica;
  */
 abstract public class Entity {
 
+    private Position lastPosition;
     private Position position;
     private int hp;
+
+    private long moveStartTime;
+    public static final long MOVE_DURATION_MS = 200;
 
     public Entity() {
     }
@@ -19,14 +23,31 @@ abstract public class Entity {
     public Entity(Position p, int hp) {
         this.hp = hp;
         position = p;
+        lastPosition = new Position(p);
+        moveStartTime = System.currentTimeMillis();
+    }
+
+    public Position getLastPosition() {
+        return lastPosition;
     }
 
     public Position getPosition() {
         return position;
     }
 
+    public long getMoveStartTime() {
+        return moveStartTime;
+    }
+
     public void setPosition(Position p) {
-        position = p;
+        if (position != null) {
+            lastPosition = new Position(position);
+        } else {
+            lastPosition = new Position(p);
+        }
+
+        position = new Position(p);
+        moveStartTime = System.currentTimeMillis();
     }
 
     public int getHp() {
@@ -50,18 +71,23 @@ abstract public class Entity {
             if (!inBoundsX || !inBoundsY) {
                 return false;
             }
+
             Tile nextTile = tm.getTile(newPosition);
             if (nextTile == null) {
                 throw new Exception("what");
             }
+
             if (nextTile.isOccupied()) {
                 return false;
             }
+
             FreeTile nextFreeTile = (FreeTile) nextTile;
 
-            position = new Position(newPosition);
             currentTile.setEntity(null);
             nextFreeTile.setEntity(this);
+
+            setPosition(newPosition);
+
             return true;
         } catch (Exception e) {
             return false;
@@ -69,5 +95,4 @@ abstract public class Entity {
     }
 
     abstract char getChar();
-
 }

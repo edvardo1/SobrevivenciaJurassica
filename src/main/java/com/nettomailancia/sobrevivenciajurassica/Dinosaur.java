@@ -41,9 +41,6 @@ abstract public class Dinosaur extends Entity implements Runnable {
     public void run() {
         while (alive && !game.quit()) {
             synchronized (game.getWorldLock()) {
-                // Enquanto existir QUALQUER batalha em andamento, este dinossauro
-                // (seja ele o adversário ou não) fica parado, esperando ser
-                // acordado por notifyAll() quando a batalha terminar.
                 while (game.getBattle() != null && alive && !game.quit()) {
                     try {
                         game.getWorldLock().wait();
@@ -64,12 +61,6 @@ abstract public class Dinosaur extends Entity implements Runnable {
 
                 think(game, player, tilemap);
             }
-
-            SwingUtilities.invokeLater(() -> {
-                if (game.getGameWindow() != null) {
-                    game.getGameWindow().repaint();
-                }
-            });
 
             try {
                 Thread.sleep(500);

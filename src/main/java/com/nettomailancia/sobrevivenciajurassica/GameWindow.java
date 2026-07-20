@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.Timer;
 
@@ -131,22 +133,88 @@ public class GameWindow extends JFrame {
 
         add(panel);
 
-        setSize(800, 600);
+        setSize(1280, 800);
         setLocationRelativeTo(null);
         setVisible(true);
+
+        Timer repaintTimer = new Timer(16, e -> panel.repaint());
+        repaintTimer.start();
 
         panel.requestFocusInWindow();
     }
 
+    private void tryDraw(Graphics g, Entity e, Set<Position> positions) {
+        final Position curr = e.getPosition();
+        final Position last = e.getLastPosition();
+        final boolean inCurr = positions.contains(curr);
+        final boolean inLast = positions.contains(last);
+        if (inCurr || inLast) {
+            double t = (System.currentTimeMillis() - e.getMoveStartTime())
+                    / (double) Entity.MOVE_DURATION_MS;
+
+            t = Math.min(1.0, Math.max(0.0, t));
+
+            double x = last.getX() + (curr.getX() - last.getX()) * t;
+            double y = last.getY() + (curr.getY() - last.getY()) * t;
+
+            g.drawImage(
+                    sprites.get(e.getChar()),
+                    (int) (x * TILE_SIZE),
+                    (int) (y * TILE_SIZE),
+                    TILE_SIZE,
+                    TILE_SIZE,
+                    panel
+            );
+        }
+    }
+
     private void drawGame(Graphics g) {
-        char[] map = game.getVisibleMap();
+        //char[] map = game.getVisibleMap();
 
-        int mapWidth = game.getTilemap().getWidth();
+        //int mapWidth = game.getTilemap().getWidth();
         int mapHeight = game.getTilemap().getHeight();
+        TileMap tilemap = game.getTilemap();
 
-        for (int y = 0; y < mapHeight; y++) {
+        //Map<Position, ArrayList<Dinosaur>> posMap = new HashMap<>();
+        //for (Dinosaur d : game.getDinos()) {
+        //    posMap.computeIfAbsent(d.getPosition(), k -> new ArrayList<>()).add(d);
+        //    posMap.computeIfAbsent(d.getLastPosition(), k -> new ArrayList<>()).add(d);
+        //}
+        Set<Position> positions = game.getVisibleMap2();
+        for (Position position : positions) {
+            try {
+                final Image image;
+                Tile t = tilemap.getTile(position);
+                if (t.getChar() == '#') {
+                    image = sprites.get('#');
+                } else {
+                    image = sprites.get(' ');
+                }
+                g.drawImage(
+                        image,
+                        position.getX() * TILE_SIZE,
+                        position.getY() * TILE_SIZE,
+                        TILE_SIZE,
+                        TILE_SIZE,
+                        panel
+                );
+            } catch (Exception ignored) {
+            }
+        }
+
+        for (Dinosaur d : game.getDinos()) {
+            tryDraw(g, d, positions);
+        }
+        tryDraw(g, game.getPlayer(), positions);
+        /*for (int y = 0; y < mapHeight; y++) {
             for (int x = 0; x < mapWidth; x++) {
-                char c = map[y * mapWidth + x];
+                //char c = map[y * mapWidth + x];
+                char c = ' ';
+                try {
+                    Tile t = tilemap.getTile(new Position(x, y));
+                    c = '.';
+                } catch (Exception ignored) {
+                }
 
                 if (c != ' ') {
                     Image sprite = sprites.getOrDefault(c, sprites.get(' '));
@@ -161,7 +229,7 @@ public class GameWindow extends JFrame {
                     );
                 }
             }
-        }
+        }*/
         g.setColor(Color.YELLOW);
         int infoY = mapHeight * TILE_SIZE + 20;
 

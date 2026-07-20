@@ -4,6 +4,8 @@
  */
 package com.nettomailancia.sobrevivenciajurassica;
 
+import java.util.Objects;
+
 /**
  *
  * @author ebm
@@ -51,6 +53,27 @@ public class Position {
 
     public boolean equals(Position other) {
         return x == other.x && y == other.y;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        return this.equals((Position) o);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
+    }
+
+    @Override
+    public String toString() {
+        return "Position{x=" + x + ", y=" + y + "}";
     }
 
     public int getX() {

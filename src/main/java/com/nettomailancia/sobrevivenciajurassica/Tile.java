@@ -17,4 +17,8 @@ abstract public class Tile {
     public Entity getEntity() {
         return null;
     }
+
+    public Supply getSupply() {
+        return null;
+    }
 }
