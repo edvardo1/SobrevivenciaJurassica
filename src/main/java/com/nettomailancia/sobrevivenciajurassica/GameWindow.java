@@ -33,7 +33,7 @@ public class GameWindow extends JFrame {
     private final Map<String, Image> actionSprites = new HashMap<>();
     private String currentAction;
 
-    private static final int TILE_SIZE = 16;
+    private static final int TILE_SIZE = 50;
 
     public GameWindow(Game game) {
         this.game = game;
@@ -144,49 +144,23 @@ public class GameWindow extends JFrame {
         int mapWidth = game.getTilemap().getWidth();
         int mapHeight = game.getTilemap().getHeight();
 
-        //g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 16));
-        Graphics2D grafic = (Graphics2D) g;
-
         for (int y = 0; y < mapHeight; y++) {
             for (int x = 0; x < mapWidth; x++) {
                 char c = map[y * mapWidth + x];
 
-                Image sprite = sprites.getOrDefault(c, sprites.get(' '));
+                if (c != ' ') {
+                    Image sprite = sprites.getOrDefault(c, sprites.get(' '));
 
-                grafic.drawImage(
-                        sprite,
-                        x * TILE_SIZE,
-                        y * TILE_SIZE,
-                        TILE_SIZE,
-                        TILE_SIZE,
-                        panel
-                );
-
-                /*  switch (c) {
-                    case '#':
-                        g.setColor(Color.GRAY);
-                        break;
-                    case '@':
-                        g.setColor(Color.GREEN);
-                        break;
-                    case 'T':
-                    case 'R':
-                    case 'C':
-                    case 'V':
-                        g.setColor(Color.RED);
-                        break;
-                    default:
-                        g.setColor(Color.WHITE);
-                        break;
+                    g.drawImage(
+                            sprite,
+                            x * TILE_SIZE,
+                            y * TILE_SIZE,
+                            TILE_SIZE,
+                            TILE_SIZE,
+                            panel
+                    );
                 }
-
-                g.drawString(
-                        Character.toString(c),
-                        x * TILE_SIZE,
-                        (y + 1) * TILE_SIZE
-                );*/
             }
-
         }
         g.setColor(Color.YELLOW);
         int infoY = mapHeight * TILE_SIZE + 20;
