@@ -1,7 +1,6 @@
 package com.nettomailancia.sobrevivenciajurassica;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyAdapter;
@@ -9,14 +8,12 @@ import java.awt.event.KeyEvent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.Image;
-import java.awt.RenderingHints;
 import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.Timer;
 
@@ -169,17 +166,9 @@ public class GameWindow extends JFrame {
     }
 
     private void drawGame(Graphics g) {
-        //char[] map = game.getVisibleMap();
-
-        //int mapWidth = game.getTilemap().getWidth();
         int mapHeight = game.getTilemap().getHeight();
         TileMap tilemap = game.getTilemap();
 
-        //Map<Position, ArrayList<Dinosaur>> posMap = new HashMap<>();
-        //for (Dinosaur d : game.getDinos()) {
-        //    posMap.computeIfAbsent(d.getPosition(), k -> new ArrayList<>()).add(d);
-        //    posMap.computeIfAbsent(d.getLastPosition(), k -> new ArrayList<>()).add(d);
-        //}
         Set<Position> positions = game.getVisibleMap2();
         for (Position position : positions) {
             try {
@@ -210,30 +199,6 @@ public class GameWindow extends JFrame {
             tryDraw(g, d, positions);
         }
         tryDraw(g, game.getPlayer(), positions);
-        /*for (int y = 0; y < mapHeight; y++) {
-            for (int x = 0; x < mapWidth; x++) {
-                //char c = map[y * mapWidth + x];
-                char c = ' ';
-                try {
-                    Tile t = tilemap.getTile(new Position(x, y));
-                    c = '.';
-                } catch (Exception ignored) {
-                }
-
-                if (c != ' ') {
-                    Image sprite = sprites.getOrDefault(c, sprites.get(' '));
-
-                    g.drawImage(
-                            sprite,
-                            x * TILE_SIZE,
-                            y * TILE_SIZE,
-                            TILE_SIZE,
-                            TILE_SIZE,
-                            panel
-                    );
-                }
-            }
-        }*/
         g.setColor(Color.YELLOW);
         int infoY = mapHeight * TILE_SIZE + 20;
 
@@ -338,5 +303,4 @@ public class GameWindow extends JFrame {
         timer1.setRepeats(false);
         timer1.start();
     }
-
 }
