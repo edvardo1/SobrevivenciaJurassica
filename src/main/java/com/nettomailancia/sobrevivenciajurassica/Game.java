@@ -133,77 +133,7 @@ public class Game {
         return false;
     }
 
-    private void fillChar(char[] c, Position p) {
-        try {
-            c[p.getY() * getTilemap().getWidth() + p.getX()] = getTilemap().getTile(p).getChar();
-        } catch (Exception e) {
-        }
-    }
-
-    private void castRay(Position orig, char[] c, double angle) {
-        double x = orig.getX() + 0.5;
-        double y = orig.getY() + 0.5;
-        double dx = Math.cos(angle) * 0.1;
-        double dy = Math.sin(angle) * 0.1;
-        boolean running = true;
-        while (Math.floor(x) == orig.getX() && Math.floor(y) == orig.getY()) {
-            x += dx;
-            y += dy;
-        }
-
-        while (running) {
-            int fx = (int) Math.floor(x);
-            int fy = (int) Math.floor(y);
-            if (!(0 <= fx && fx < tilemap.getWidth())) {
-                break;
-            }
-            if (!(0 <= fy && fy < tilemap.getHeight())) {
-                break;
-            }
-            Position fpos = new Position(fx, fy);
-            fillChar(c, fpos);
-            try {
-                if (tilemap.getTile(fpos).isOccupied()) {
-                    running = false;
-                }
-            } catch (Exception e) {
-                running = false;
-            }
-            x += dx;
-            y += dy;
-        }
-    }
-
-    public char[] getVisibleMap() {
-        char[] c = new char[tilemap.getWidth() * tilemap.getHeight()];
-
-        try {
-            if (onDebugMode) {
-                for (int y = 0; y < tilemap.getHeight(); y++) {
-                    for (int x = 0; x < tilemap.getWidth(); x++) {
-                        Tile t = tilemap.getTile(new Position(x, y));
-                        c[y * tilemap.getWidth() + x] = t.getChar();
-                    }
-                }
-            } else {
-                Position ppos = player.getPosition();
-
-                for (int i = 0; i < c.length; i++) {
-                    c[i] = ' ';
-                }
-
-                for (double angle = 0.0; angle < 2 * Math.PI; angle += 0.01) {
-                    castRay(ppos, c, angle);
-                }
-                fillChar(c, player.getPosition());
-            }
-        } catch (Exception e) {
-        }
-
-        return c;
-    }
-
-    private void castRay2(Position orig, Set<Position> positions, double angle) {
+    private void castRay(Position orig, Set<Position> positions, double angle) {
         double x = orig.getX() + 0.5;
         double y = orig.getY() + 0.5;
         double dx = Math.cos(angle) * 0.1;
@@ -237,7 +167,7 @@ public class Game {
         }
     }
 
-    public Set<Position> getVisibleMap2() {
+    public Set<Position> getVisibleMap() {
         Set<Position> positions = new HashSet<>();
 
         try {
@@ -251,7 +181,7 @@ public class Game {
                 Position ppos = player.getPosition();
 
                 for (double angle = 0.0; angle < 2 * Math.PI; angle += 0.01) {
-                    castRay2(ppos, positions, angle);
+                    castRay(ppos, positions, angle);
                 }
                 positions.add(ppos);
             }

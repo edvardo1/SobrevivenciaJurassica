@@ -88,34 +88,19 @@ public class GameWindow extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyCode()) {
-                    case KeyEvent.VK_W:
-                        game.playerInput('w');
-                        break;
-                    case KeyEvent.VK_A:
-                        game.playerInput('a');
-                        break;
-                    case KeyEvent.VK_S:
-                        game.playerInput('s');
-                        break;
-                    case KeyEvent.VK_D:
-                        game.playerInput('d');
-                        break;
-                    case KeyEvent.VK_C:
-                        game.playerInput('c');
-                        break;
-                    case KeyEvent.VK_Q:
+                    case KeyEvent.VK_W -> game.playerInput('w');
+                    case KeyEvent.VK_A -> game.playerInput('a');
+                    case KeyEvent.VK_S -> game.playerInput('s');
+                    case KeyEvent.VK_D -> game.playerInput('d');
+                    case KeyEvent.VK_C -> game.playerInput('c');
+                    case KeyEvent.VK_Q -> {
                         game.playerInput('q');
                         dispose();
                         return;
-                    case KeyEvent.VK_G:
-                        game.playerInput('D');
-                        break;
-                    case KeyEvent.VK_P:
-                        game.playerInput('p');
-                        break;
-                    case KeyEvent.VK_R:
-                        game.playerInput('r');
-                        break;
+                    }
+                    case KeyEvent.VK_G -> game.playerInput('D');
+                    case KeyEvent.VK_P -> game.playerInput('p');
+                    case KeyEvent.VK_R -> game.playerInput('r');
                 }
 
                 if (game.quit()) {
@@ -169,7 +154,7 @@ public class GameWindow extends JFrame {
         int mapHeight = game.getTilemap().getHeight();
         TileMap tilemap = game.getTilemap();
 
-        Set<Position> positions = game.getVisibleMap2();
+        Set<Position> positions = game.getVisibleMap();
         for (Position position : positions) {
             try {
                 final Image image;
@@ -231,7 +216,7 @@ public class GameWindow extends JFrame {
         Image playerSprite = sprites.get('@');
         d2.drawImage(playerSprite, 100, 260, 96, 96, panel);
         d2.drawString("Você", 100, 250);
-        drawHpBar(d2, 100, 360, player.getHp(), player.MAX_HP);
+        drawHpBar(d2, 100, 360, player.getHp(), Player.MAX_HP);
 
         if (currentAction != null) {
             Image actionImg = actionSprites.get(currentAction);
@@ -265,7 +250,6 @@ public class GameWindow extends JFrame {
         if (game.quit()) {
             game.stopDinoThreads();
             dispose();
-            return;
         } else {
             if (game.getBattle() != null) {
                 playAttackSequence(game.getBattle().getPlayerAction(), game.getBattle().getDinoAction());
